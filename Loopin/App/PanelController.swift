@@ -2,6 +2,10 @@ import AppKit
 import SwiftUI
 import Combine
 
+extension Notification.Name {
+    static let panelDidOpen = Notification.Name("Loopin.panelDidOpen")
+}
+
 final class PanelController {
     private let panel: FloatingPanel
     private let settingsStore: SettingsStore
@@ -59,6 +63,7 @@ final class PanelController {
     func show() {
         panel.makeKeyAndOrderFront(nil)
         panel.orderFrontRegardless()
+        NotificationCenter.default.post(name: .panelDidOpen, object: nil)
     }
 
     func hide() {

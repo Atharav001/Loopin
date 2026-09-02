@@ -15,4 +15,7 @@ final class TimerSession: ObservableObject {
     @Published var completedFocusCyclesToday: Int = 0
     @Published var activePreset: TimerPreset?
     @Published var linkedTaskId: UUID?
+
+    /// True while a reminder is pending acknowledgment (Stage 1 of escalation).
+    @Published var reminderPending: Bool = false
 }

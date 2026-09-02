@@ -6,6 +6,11 @@ import Combine
 final class TimerEngine: ObservableObject {
     let session: TimerSession
 
+    /// Invoked when a focus or break session ends (natural expiry or skip),
+    /// with the phase that just completed. The reminder scheduler uses this to
+    /// arm the two-stage escalation.
+    var onSessionEnded: ((TimerPhase) -> Void)?
+
     private var ticker: Timer?
     private var currentDuration: TimeInterval = 0
 
@@ -59,12 +64,32 @@ final class TimerEngine: ObservableObject {
     /// Completes the running phase and advances to the next.
     /// Called on timer expiry and when the user taps the "done/skip" action.
     func completePhase() {
+        let endingPhase = session.phase
+        switch session.phase {
+        case .focus:
+            session.completedFocusCyclesToday += 1
+            onSessionEnded?(.focus)
+            startBreak()
+        case .breakShort, .breakLong:
+            onSessionEnded?(endingPhase)
+            reset()
+        case .idle:
+            reset()
+        }
+    }
+
+    /// User-initiated skip: advances to the next phase without arming a reminder
+    /// (the user is present, so no escalation is needed).
+    func skip() {
+        guard session.phase != .idle else { return }
         switch session.phase {
         case .focus:
             session.completedFocusCyclesToday += 1
             startBreak()
-        case .breakShort, .breakLong, .idle:
+        case .breakShort, .breakLong:
             reset()
+        case .idle:
+            return
         }
     }
 
@@ -81,11 +106,6 @@ final class TimerEngine: ObservableObject {
         startTicker()
     }
 
-    func skip() {
-        guard session.phase != .idle else { return }
-        completePhase()
-    }
-
     func reset() {
         ticker?.invalidate()
         ticker = nil
@@ -93,6 +113,7 @@ final class TimerEngine: ObservableObject {
         session.isPaused = false
         session.remainingSeconds = 0
         session.linkedTaskId = nil
+        session.reminderPending = false
     }
 
     /// Recomputes the current phase's total duration from the (possibly edited)
