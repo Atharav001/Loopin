@@ -9,18 +9,19 @@ struct QuickAddView: View {
     var body: some View {
         HStack(spacing: 8) {
             Image(systemName: "plus.circle.fill")
-                .foregroundStyle(Color(hex: "#3DDC97"))
+                .foregroundStyle(AppTheme.accentTeal)
 
             TextField("Capture a thought…", text: $text)
                 .textFieldStyle(.plain)
                 .focused($isFocused)
                 .onSubmit(submit)
                 .font(.system(size: 13))
+                .foregroundStyle(AppTheme.textPrimary)
         }
         .padding(9)
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .fill(Color(nsColor: .textBackgroundColor))
+                .fill(AppTheme.surface)
         )
     }
 

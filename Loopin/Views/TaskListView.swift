@@ -23,7 +23,7 @@ struct TaskListView: View {
         .background(
             RoundedRectangle(cornerRadius: 8)
                 .strokeBorder(
-                    isDropTarget ? Color(hex: "#3DDC97") : Color.clear,
+                    isDropTarget ? AppTheme.accentTeal : Color.clear,
                     lineWidth: 1.5
                 )
         )
@@ -86,13 +86,13 @@ struct TaskListView: View {
         VStack(spacing: 8) {
             Image(systemName: "checklist")
                 .font(.system(size: 26))
-                .foregroundStyle(Color(nsColor: .tertiaryLabelColor))
+                .foregroundStyle(AppTheme.textSecondary)
             Text("Nothing open right now")
                 .font(.system(size: 13))
-                .foregroundStyle(Color(nsColor: .secondaryLabelColor))
+                .foregroundStyle(AppTheme.textSecondary)
             Text("Drop a thought in above — no forms needed.")
                 .font(.system(size: 11))
-                .foregroundStyle(Color(nsColor: .tertiaryLabelColor))
+                .foregroundStyle(AppTheme.textSecondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()

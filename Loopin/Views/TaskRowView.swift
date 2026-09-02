@@ -13,6 +13,10 @@ struct TaskRowView: View {
     @FocusState private var editFocused: Bool
     @State private var isHovering: Bool = false
 
+    /// Drives the completion animation: true while the row plays its ripple +
+    /// teal background flash before being removed from the open list.
+    @State private var completing = false
+
     var body: some View {
         Group {
             if isEditing {
@@ -29,18 +33,20 @@ struct TaskRowView: View {
             Button {
                 complete()
             } label: {
-                Image(systemName: "circle")
+                Image(systemName: completing ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 15, weight: .medium))
-                    .foregroundStyle(Color(nsColor: .secondaryLabelColor))
+                    .foregroundStyle(completing ? AppTheme.accentTeal : AppTheme.textSecondary)
             }
             .buttonStyle(.plain)
             .help("Mark done")
+            .disabled(completing)
+            .ripple(trigger: completing, color: AppTheme.accentTeal)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(task.title)
                     .font(.system(size: 13))
                     .lineLimit(2)
-                    .foregroundStyle(Color(nsColor: .labelColor))
+                    .foregroundStyle(AppTheme.textPrimary)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .onTapGesture(count: 2) {
                         draft = task.title
@@ -56,13 +62,14 @@ struct TaskRowView: View {
                     imageThumbnail(for: image)
                 }
             }
+            .opacity(completing ? 0.6 : 1)
 
             Spacer(minLength: 0)
 
             if let dueDate = task.dueDate {
                 Text(dueDate, style: .date)
                     .font(.system(size: 11))
-                    .foregroundStyle(Color(nsColor: .tertiaryLabelColor))
+                    .foregroundStyle(AppTheme.textSecondary)
             }
 
             Button {
@@ -70,7 +77,7 @@ struct TaskRowView: View {
             } label: {
                 Image(systemName: "xmark")
                     .font(.system(size: 10, weight: .semibold))
-                    .foregroundStyle(Color(nsColor: .secondaryLabelColor))
+                    .foregroundStyle(AppTheme.textSecondary)
             }
             .buttonStyle(.plain)
             .opacity(isHovering ? 1 : 0)
@@ -81,9 +88,19 @@ struct TaskRowView: View {
         .padding(.horizontal, 10)
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .fill(Color(nsColor: isHovering ? .quaternaryLabelColor : .textBackgroundColor).opacity(isHovering ? 0.35 : 1))
+                .fill(rowBackground)
         )
         .onHover { isHovering = $0 }
+    }
+
+    private var rowBackground: Color {
+        if completing {
+            return AppTheme.accentTeal.opacity(0.18)
+        }
+        if isHovering {
+            return AppTheme.surface.opacity(1)
+        }
+        return AppTheme.surface
     }
 
     private func linkChip(for link: LinkAttachment) -> some View {
@@ -107,7 +124,7 @@ struct TaskRowView: View {
         .padding(.vertical, 2)
         .background(
             Capsule()
-                .fill(Color(nsColor: .controlBackgroundColor))
+                .fill(AppTheme.surface)
         )
     }
 
@@ -123,7 +140,7 @@ struct TaskRowView: View {
             } else {
                 Image(systemName: "photo")
                     .font(.system(size: 14))
-                    .foregroundStyle(Color(nsColor: .secondaryLabelColor))
+                    .foregroundStyle(AppTheme.textSecondary)
             }
         }
     }
@@ -148,9 +165,17 @@ struct TaskRowView: View {
     }
 
     private func complete() {
-        var updated = task
-        updated.isComplete = true
-        taskStore.update(updated)
+        guard !completing else { return }
+        completing = true
+
+        // Run the completion animation (ripple + teal flash) for ~300ms, then
+        // mark the task complete so it drops off the open list.
+        Swift.Task { @MainActor in
+            try? await Swift.Task.sleep(nanoseconds: 360_000_000)
+            var updated = task
+            updated.isComplete = true
+            taskStore.update(updated)
+        }
     }
 
     private func commitEdit() {

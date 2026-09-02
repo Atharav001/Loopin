@@ -24,6 +24,7 @@
 		6F0579120AFEB66939246C1B /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB1C312E7A7B6DA195626C5 /* Attachment.swift */; };
 		7B5A19E90281CE5FA42C7464 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD828DF28C65B0E3A765753A /* AppDelegate.swift */; };
 		7EEC1EDBE33157AA6BA4D844 /* CaptureClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D1E539F517262075A7649F /* CaptureClassifier.swift */; };
+		822F7A87F56D6BF5A86FD3EF /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A42CB61F46DAC32C0EF9BB /* AppTheme.swift */; };
 		9B232B459593D0DB365E5435 /* RippleModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15C2630FA35D89C75D46F0C /* RippleModifier.swift */; };
 		9B9387CE57F02A617767D97F /* QuickAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772E2AE17DD023B5FE832F80 /* QuickAddView.swift */; };
 		A4BAA7410BA7CF424E5F1E93 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12A583D7EA72DEA17EF51DF /* AppSettings.swift */; };
@@ -62,6 +63,7 @@
 		772E2AE17DD023B5FE832F80 /* QuickAddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAddView.swift; sourceTree = "<group>"; };
 		83DFEDEF6A0E529755B36A1F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		89236AB65F034F58B461058C /* TimerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerSession.swift; sourceTree = "<group>"; };
+		97A42CB61F46DAC32C0EF9BB /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		B34AAC3DDACBBEC09698F596 /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
 		B40AE63778D63586EF5F6E19 /* ReminderScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderScheduler.swift; sourceTree = "<group>"; };
 		B78E550F13D6ACF7259ABA63 /* PanelRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelRootView.swift; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 		6FF54E96558B56AB2FD59EA2 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				97A42CB61F46DAC32C0EF9BB /* AppTheme.swift */,
 				B34AAC3DDACBBEC09698F596 /* Color+Hex.swift */,
 				2ED716ECE623EFADB4DA1C5F /* GlowModifier.swift */,
 				F15C2630FA35D89C75D46F0C /* RippleModifier.swift */,
@@ -251,6 +254,7 @@
 				7B5A19E90281CE5FA42C7464 /* AppDelegate.swift in Sources */,
 				A4BAA7410BA7CF424E5F1E93 /* AppSettings.swift in Sources */,
 				BAE1803F640F57B07C76F53D /* AppState.swift in Sources */,
+				822F7A87F56D6BF5A86FD3EF /* AppTheme.swift in Sources */,
 				6F0579120AFEB66939246C1B /* Attachment.swift in Sources */,
 				7EEC1EDBE33157AA6BA4D844 /* CaptureClassifier.swift in Sources */,
 				BBFD4FA744FFCDF5F8121C5A /* Color+Hex.swift in Sources */,

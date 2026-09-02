@@ -20,9 +20,9 @@ struct PanelRootView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .frame(minWidth: 320, minHeight: 400)
-        .background(Color(nsColor: .windowBackgroundColor))
+        .background(AppTheme.background)
         .glow(
-            accent: Color(hex: "#9B7BFF"),
+            accent: AppTheme.accentViolet,
             intensity: .standard,
             active: bridge.isPinned
         )
@@ -32,7 +32,7 @@ struct PanelRootView: View {
         HStack {
             Text("Loopin")
                 .font(.headline)
-                .foregroundStyle(Color(nsColor: .labelColor))
+                .foregroundStyle(AppTheme.textPrimary)
             Spacer()
             Button {
                 bridge.togglePin()
@@ -41,8 +41,8 @@ struct PanelRootView: View {
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(
                         bridge.isPinned
-                            ? Color(hex: "#9B7BFF")
-                            : Color(nsColor: .secondaryLabelColor)
+                            ? AppTheme.accentViolet
+                            : AppTheme.textSecondary
                     )
             }
             .buttonStyle(.plain)

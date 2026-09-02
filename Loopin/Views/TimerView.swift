@@ -7,6 +7,9 @@ struct TimerView: View {
     @EnvironmentObject private var settingsStore: SettingsStore
     @EnvironmentObject private var taskStore: TaskStore
 
+    /// Flips on phase change to drive the one-shot glow flash (allow-list #3).
+    @State private var phaseFlash = false
+
     private var ringProgress: Double {
         // Shrinking disc: starts full, drains to nothing as time elapses.
         guard session.activePreset != nil else { return 0 }
@@ -27,13 +30,7 @@ struct TimerView: View {
 
     private var isIdle: Bool { session.phase == .idle }
 
-    private var accentColor: Color {
-        switch session.phase {
-        case .focus: return Color(hex: "#3DDC97")
-        case .breakShort, .breakLong: return Color(hex: "#FF7A6B")
-        case .idle: return Color(nsColor: .secondaryLabelColor)
-        }
-    }
+    private var accentColor: Color { AppTheme.color(for: session.phase) }
 
     var body: some View {
         VStack(spacing: 12) {
@@ -44,12 +41,15 @@ struct TimerView: View {
                     .font(.system(size: 11))
                     .lineLimit(1)
                     .truncationMode(.tail)
-                    .foregroundStyle(Color(nsColor: .secondaryLabelColor))
+                    .foregroundStyle(AppTheme.textSecondary)
             }
             phaseLabel
             controls
         }
         .padding(.vertical, 6)
+        .onChange(of: session.phase) { _, _ in
+            phaseFlash.toggle()
+        }
     }
 
     private var presetPicker: some View {
@@ -88,11 +88,16 @@ struct TimerView: View {
             Text(timeString(seconds: session.remainingSeconds))
                 .font(.system(size: 24, weight: .semibold, design: .rounded))
                 .monospacedDigit()
-                .foregroundStyle(Color(nsColor: isIdle ? .secondaryLabelColor : .labelColor))
+                .foregroundStyle(isIdle ? AppTheme.textSecondary : AppTheme.textPrimary)
         }
         .frame(width: 132, height: 132)
         .padding(8)
-        .glow(accent: accentColor, intensity: settingsStore.settings.stimulationIntensity, active: !isIdle)
+        .glow(
+            accent: accentColor,
+            intensity: settingsStore.settings.stimulationIntensity,
+            active: !isIdle
+        )
+        .ripple(trigger: phaseFlash, color: accentColor)
     }
 
     private var phaseLabel: some View {
@@ -118,7 +123,7 @@ struct TimerView: View {
                     engine.startFocus()
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(Color(hex: "#3DDC97"))
+                .tint(AppTheme.accentTeal)
                 .foregroundStyle(Color.black)
             } else {
                 Button(session.isPaused ? "Resume" : "Pause") {
