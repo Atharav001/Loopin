@@ -66,6 +66,8 @@ struct TaskRowView: View {
 
             Spacer(minLength: 0)
 
+            sizeMenu
+
             if let dueDate = task.dueDate {
                 Text(dueDate, style: .date)
                     .font(.system(size: 11))
@@ -101,6 +103,51 @@ struct TaskRowView: View {
             return AppTheme.surface.opacity(1)
         }
         return AppTheme.surface
+    }
+
+    private var sizeMenu: some View {
+        Menu {
+            ForEach(TaskSize.allCases, id: \.self) { size in
+                Button {
+                    setSize(size)
+                } label: {
+                    if task.size == size {
+                        Label(size.label, systemImage: "checkmark")
+                    } else {
+                        Text(size.label)
+                    }
+                }
+            }
+            if task.size != nil {
+                Divider()
+                Button("Clear") { setSize(nil) }
+            }
+        } label: {
+            Image(systemName: task.size?.symbol ?? "tag")
+                .font(.system(size: 11))
+                .foregroundStyle(
+                    task.size != nil ? sizeColor : AppTheme.textSecondary
+                )
+        }
+        .menuStyle(.borderlessButton)
+        .menuIndicator(.hidden)
+        .fixedSize()
+        .help("Set task size")
+    }
+
+    private var sizeColor: Color {
+        switch task.size {
+        case .big: return AppTheme.accentCoral
+        case .medium: return AppTheme.accentViolet
+        case .small: return AppTheme.accentTeal
+        case nil: return AppTheme.textSecondary
+        }
+    }
+
+    private func setSize(_ size: TaskSize?) {
+        var updated = task
+        updated.size = size
+        taskStore.update(updated)
     }
 
     private func linkChip(for link: LinkAttachment) -> some View {

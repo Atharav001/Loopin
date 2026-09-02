@@ -4,6 +4,22 @@ enum TaskSize: String, Codable, Equatable, CaseIterable {
     case big
     case medium
     case small
+
+    var label: String {
+        switch self {
+        case .big: return "Big"
+        case .medium: return "Medium"
+        case .small: return "Small"
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .big: return "largecircle.fill.circle"
+        case .medium: return "circle.circle"
+        case .small: return "smallcircle.filled.circle"
+        }
+    }
 }
 
 enum TaskFraming: String, Codable, Equatable {

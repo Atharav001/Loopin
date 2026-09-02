@@ -3,21 +3,27 @@ import AppKit
 
 struct PanelRootView: View {
     @EnvironmentObject private var bridge: PanelBridge
+    @State private var showingSettings = false
 
     var body: some View {
         VStack(spacing: 0) {
             header
             Divider()
-            TimerView()
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-            Divider()
-            QuickAddView()
-                .padding(.horizontal, 12)
-                .padding(.vertical, 10)
-            Divider()
-            TaskListView()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            if showingSettings {
+                SettingsView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                TimerView()
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                Divider()
+                QuickAddView()
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 10)
+                Divider()
+                TaskListView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
         }
         .frame(minWidth: 320, minHeight: 400)
         .background(AppTheme.background)
@@ -47,6 +53,16 @@ struct PanelRootView: View {
             }
             .buttonStyle(.plain)
             .help(bridge.isPinned ? "Pinned: always on top" : "Not pinned")
+
+            Button {
+                showingSettings.toggle()
+            } label: {
+                Image(systemName: showingSettings ? "xmark" : "gearshape")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(AppTheme.textSecondary)
+            }
+            .buttonStyle(.plain)
+            .help(showingSettings ? "Close settings" : "Settings")
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
