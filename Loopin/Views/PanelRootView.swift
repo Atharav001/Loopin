@@ -8,6 +8,10 @@ struct PanelRootView: View {
         VStack(spacing: 0) {
             header
             Divider()
+            TimerView()
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+            Divider()
             QuickAddView()
                 .padding(.horizontal, 12)
                 .padding(.vertical, 10)
@@ -50,7 +54,17 @@ struct PanelRootView: View {
 }
 
 #Preview {
-    PanelRootView()
-        .environmentObject(PanelBridge())
-        .environmentObject(TaskStore())
+    PanelPreview()
+}
+
+private struct PanelPreview: View {
+    @State private var session = TimerSession()
+    var body: some View {
+        PanelRootView()
+            .environmentObject(PanelBridge())
+            .environmentObject(TaskStore())
+            .environmentObject(SettingsStore())
+            .environmentObject(TimerEngine(session: session))
+            .environmentObject(session)
+    }
 }

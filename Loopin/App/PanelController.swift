@@ -50,6 +50,8 @@ final class PanelController {
                 .environmentObject(appState.settingsStore)
                 .environmentObject(appState.taskStore)
                 .environmentObject(appState.panelBridge)
+                .environmentObject(appState.timerEngine)
+                .environmentObject(appState.timerSession)
         )
         panel.contentViewController = contentController
     }

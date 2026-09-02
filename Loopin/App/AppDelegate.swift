@@ -20,7 +20,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let appState = AppState(
             settingsStore: settingsStore,
             taskStore: taskStore,
-            panelBridge: panelBridge
+            panelBridge: panelBridge,
+            timerSession: timerSession
         )
         self.appState = appState
 
