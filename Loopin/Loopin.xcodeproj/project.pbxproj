@@ -28,7 +28,9 @@
 		9B9387CE57F02A617767D97F /* QuickAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772E2AE17DD023B5FE832F80 /* QuickAddView.swift */; };
 		A4BAA7410BA7CF424E5F1E93 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12A583D7EA72DEA17EF51DF /* AppSettings.swift */; };
 		ACB51DFB3EE32D054CDC95BD /* JSONStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A06D2B1B5FEF58BCB1748F /* JSONStore.swift */; };
+		B2A0CF64CEF681991CA84B77 /* PanelBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AB1D6F3E8315851F7A024D /* PanelBridge.swift */; };
 		B9949F547469D7976F143583 /* TaskRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F0D32FE67C38200F7A5064 /* TaskRowView.swift */; };
+		BBFD4FA744FFCDF5F8121C5A /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AAC3DDACBBEC09698F596 /* Color+Hex.swift */; };
 		C3CC1C11DE44D5B03EF04D50 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22704C2071AAD2B4D5444BBF /* TimerView.swift */; };
 		CEA1C34CC797A23DF198998F /* UserFacingStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383AB9E797BEC0529B4C7CBC /* UserFacingStrings.swift */; };
 		CEC8B02294A85A1CC7AD9FD2 /* PanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C44CE744FD7380AAA576C6 /* PanelController.swift */; };
@@ -57,9 +59,11 @@
 		772E2AE17DD023B5FE832F80 /* QuickAddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAddView.swift; sourceTree = "<group>"; };
 		83DFEDEF6A0E529755B36A1F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		89236AB65F034F58B461058C /* TimerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerSession.swift; sourceTree = "<group>"; };
+		B34AAC3DDACBBEC09698F596 /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
 		B40AE63778D63586EF5F6E19 /* ReminderScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderScheduler.swift; sourceTree = "<group>"; };
 		B78E550F13D6ACF7259ABA63 /* PanelRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelRootView.swift; sourceTree = "<group>"; };
 		C208F505AACC6185FB7BE6EE /* TimerPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerPreset.swift; sourceTree = "<group>"; };
+		C9AB1D6F3E8315851F7A024D /* PanelBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelBridge.swift; sourceTree = "<group>"; };
 		DB8E2CF138C2517C551655FB /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		E3BD1A0C09EBEE1795DE3800 /* LoopinApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoopinApp.swift; sourceTree = "<group>"; };
 		F12A583D7EA72DEA17EF51DF /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
@@ -93,6 +97,7 @@
 			children = (
 				FD828DF28C65B0E3A765753A /* AppDelegate.swift */,
 				5B1F01E7DC19CFAB4E606546 /* FloatingPanel.swift */,
+				C9AB1D6F3E8315851F7A024D /* PanelBridge.swift */,
 				55C44CE744FD7380AAA576C6 /* PanelController.swift */,
 				DB8E2CF138C2517C551655FB /* StatusBarController.swift */,
 			);
@@ -126,6 +131,7 @@
 		6FF54E96558B56AB2FD59EA2 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				B34AAC3DDACBBEC09698F596 /* Color+Hex.swift */,
 				2ED716ECE623EFADB4DA1C5F /* GlowModifier.swift */,
 				F15C2630FA35D89C75D46F0C /* RippleModifier.swift */,
 			);
@@ -240,10 +246,12 @@
 				A4BAA7410BA7CF424E5F1E93 /* AppSettings.swift in Sources */,
 				6F0579120AFEB66939246C1B /* Attachment.swift in Sources */,
 				7EEC1EDBE33157AA6BA4D844 /* CaptureClassifier.swift in Sources */,
+				BBFD4FA744FFCDF5F8121C5A /* Color+Hex.swift in Sources */,
 				196F5E32CD226F1091A37397 /* FloatingPanel.swift in Sources */,
 				5AD76EDF1398D000DB5FB1D9 /* GlowModifier.swift in Sources */,
 				ACB51DFB3EE32D054CDC95BD /* JSONStore.swift in Sources */,
 				35FA90C4FADA3A0A5DB26B1E /* LoopinApp.swift in Sources */,
+				B2A0CF64CEF681991CA84B77 /* PanelBridge.swift in Sources */,
 				CEC8B02294A85A1CC7AD9FD2 /* PanelController.swift in Sources */,
 				29583C4AD7949E4608DB792A /* PanelRootView.swift in Sources */,
 				9B9387CE57F02A617767D97F /* QuickAddView.swift in Sources */,
