@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		02A308D3CBB28DA27CA06208 /* TimerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89236AB65F034F58B461058C /* TimerSession.swift */; };
 		063572ADAB63F44356C1CD5B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 70EC711E0685BD6ECA060B3C /* Assets.xcassets */; };
+		11502CABC5B53C2FE7F314EE /* WhatNowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBC5C344A39BBA83D039AF7E /* WhatNowView.swift */; };
 		196F5E32CD226F1091A37397 /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1F01E7DC19CFAB4E606546 /* FloatingPanel.swift */; };
 		1ADC2160624AA75E6E37DF9C /* TaskStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF7570BDCDA32523C2D980B /* TaskStore.swift */; };
 		22F28D2053C7A0094E351FB5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DFEDEF6A0E529755B36A1F /* SettingsView.swift */; };
@@ -18,6 +19,7 @@
 		33CFB48B559AE7F296827CD1 /* TimerPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = C208F505AACC6185FB7BE6EE /* TimerPreset.swift */; };
 		3577F14EFE4483DB69FED1BC /* WhatNowSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 641AEC6B40CAAC3236C80630 /* WhatNowSelector.swift */; };
 		35FA90C4FADA3A0A5DB26B1E /* LoopinApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BD1A0C09EBEE1795DE3800 /* LoopinApp.swift */; };
+		4990DD5718F7A90DA483DDE3 /* PresenceGlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5301C43C20C5A80F9E6D459 /* PresenceGlowView.swift */; };
 		51AD07DE972C48C8FCAB927A /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8E2CF138C2517C551655FB /* StatusBarController.swift */; };
 		5AD76EDF1398D000DB5FB1D9 /* GlowModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED716ECE623EFADB4DA1C5F /* GlowModifier.swift */; };
 		5E1C1AA7DD8C509C388CDA61 /* TaskListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 182FC1DE9A9464D2D57889C9 /* TaskListView.swift */; };
@@ -69,9 +71,11 @@
 		B78E550F13D6ACF7259ABA63 /* PanelRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelRootView.swift; sourceTree = "<group>"; };
 		C208F505AACC6185FB7BE6EE /* TimerPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerPreset.swift; sourceTree = "<group>"; };
 		C9AB1D6F3E8315851F7A024D /* PanelBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelBridge.swift; sourceTree = "<group>"; };
+		CBC5C344A39BBA83D039AF7E /* WhatNowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatNowView.swift; sourceTree = "<group>"; };
 		DB8E2CF138C2517C551655FB /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		DEA6A061270B0E9555ADA0D1 /* LinkMetadataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkMetadataFetcher.swift; sourceTree = "<group>"; };
 		E3BD1A0C09EBEE1795DE3800 /* LoopinApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoopinApp.swift; sourceTree = "<group>"; };
+		E5301C43C20C5A80F9E6D459 /* PresenceGlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenceGlowView.swift; sourceTree = "<group>"; };
 		F12A583D7EA72DEA17EF51DF /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		F15C2630FA35D89C75D46F0C /* RippleModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RippleModifier.swift; sourceTree = "<group>"; };
 		FD828DF28C65B0E3A765753A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -122,6 +126,7 @@
 				182FC1DE9A9464D2D57889C9 /* TaskListView.swift */,
 				63F0D32FE67C38200F7A5064 /* TaskRowView.swift */,
 				22704C2071AAD2B4D5444BBF /* TimerView.swift */,
+				CBC5C344A39BBA83D039AF7E /* WhatNowView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -142,6 +147,7 @@
 				97A42CB61F46DAC32C0EF9BB /* AppTheme.swift */,
 				B34AAC3DDACBBEC09698F596 /* Color+Hex.swift */,
 				2ED716ECE623EFADB4DA1C5F /* GlowModifier.swift */,
+				E5301C43C20C5A80F9E6D459 /* PresenceGlowView.swift */,
 				F15C2630FA35D89C75D46F0C /* RippleModifier.swift */,
 			);
 			path = Components;
@@ -266,6 +272,7 @@
 				B2A0CF64CEF681991CA84B77 /* PanelBridge.swift in Sources */,
 				CEC8B02294A85A1CC7AD9FD2 /* PanelController.swift in Sources */,
 				29583C4AD7949E4608DB792A /* PanelRootView.swift in Sources */,
+				4990DD5718F7A90DA483DDE3 /* PresenceGlowView.swift in Sources */,
 				9B9387CE57F02A617767D97F /* QuickAddView.swift in Sources */,
 				F7DE6BA9292B05242DB77B65 /* ReminderScheduler.swift in Sources */,
 				9B232B459593D0DB365E5435 /* RippleModifier.swift in Sources */,
@@ -282,6 +289,7 @@
 				C3CC1C11DE44D5B03EF04D50 /* TimerView.swift in Sources */,
 				CEA1C34CC797A23DF198998F /* UserFacingStrings.swift in Sources */,
 				3577F14EFE4483DB69FED1BC /* WhatNowSelector.swift in Sources */,
+				11502CABC5B53C2FE7F314EE /* WhatNowView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -35,13 +35,25 @@ struct TimerView: View {
     var body: some View {
         VStack(spacing: 12) {
             presetPicker
-            ring
-            if let linkedTitle = linkedTaskTitle {
-                Text(linkedTitle)
-                    .font(.system(size: 11))
-                    .lineLimit(1)
-                    .truncationMode(.tail)
-                    .foregroundStyle(AppTheme.textSecondary)
+            ZStack {
+                ring
+                presenceGlow
+            }
+            if let linked = linkedTask {
+                VStack(spacing: 2) {
+                    if let step = linked.firstStep, !step.isEmpty {
+                        Text(step)
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundStyle(AppTheme.accentTeal)
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+                    }
+                    Text(linked.title)
+                        .font(.system(size: 11))
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+                        .foregroundStyle(AppTheme.textSecondary)
+                }
             }
             phaseLabel
             controls
@@ -50,6 +62,19 @@ struct TimerView: View {
         .onChange(of: session.phase) { _, _ in
             phaseFlash.toggle()
         }
+    }
+
+    private var presenceGlow: some View {
+        Group {
+            if session.phase == .focus && !session.isPaused {
+                PresenceGlowView()
+            }
+        }
+    }
+
+    private var linkedTask: Task? {
+        guard let id = session.linkedTaskId else { return nil }
+        return taskStore.tasks.first(where: { $0.id == id })
     }
 
     private var presetPicker: some View {
@@ -120,7 +145,7 @@ struct TimerView: View {
         HStack(spacing: 10) {
             if isIdle {
                 Button("Start focus") {
-                    engine.startFocus()
+                    engine.startFocus(linkedTaskId: suggestedLinkedTaskID)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(AppTheme.accentTeal)
@@ -150,9 +175,12 @@ struct TimerView: View {
         }
     }
 
-    private var linkedTaskTitle: String? {
-        guard let id = session.linkedTaskId else { return nil }
-        return taskStore.tasks.first(where: { $0.id == id })?.title
+    /// FR-13: when starting a fresh focus session with no task already linked,
+    /// surface a task framed "do first next session" as the session's linked task.
+    private var suggestedLinkedTaskID: UUID? {
+        taskStore.tasks
+            .first(where: { !$0.isComplete && $0.framing == .doFirstNextSession })?
+            .id
     }
 
     private func selectPreset(id: UUID) {

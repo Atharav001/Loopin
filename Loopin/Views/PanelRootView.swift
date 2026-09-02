@@ -4,6 +4,7 @@ import AppKit
 struct PanelRootView: View {
     @EnvironmentObject private var bridge: PanelBridge
     @State private var showingSettings = false
+    @State private var showingWhatNow = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -20,6 +21,11 @@ struct PanelRootView: View {
                 QuickAddView()
                     .padding(.horizontal, 12)
                     .padding(.vertical, 10)
+                if showingWhatNow {
+                    WhatNowView()
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                }
                 Divider()
                 TaskListView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -53,6 +59,16 @@ struct PanelRootView: View {
             }
             .buttonStyle(.plain)
             .help(bridge.isPinned ? "Pinned: always on top" : "Not pinned")
+
+            Button {
+                showingWhatNow.toggle()
+            } label: {
+                Image(systemName: "questionmark.circle")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(showingWhatNow ? AppTheme.accentTeal : AppTheme.textSecondary)
+            }
+            .buttonStyle(.plain)
+            .help(showingWhatNow ? "Hide What now" : "What now — show one task to do next")
 
             Button {
                 showingSettings.toggle()

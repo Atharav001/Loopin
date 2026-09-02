@@ -10,6 +10,10 @@ struct TaskRowView: View {
     var onEndEdit: () -> Void
 
     @State private var draft: String = ""
+    @State private var stepDraft: String = ""
+    @State private var editingFirstStep: Bool = false
+    @State private var isSettingDeadline: Bool = false
+    @State private var deadlineDraft: Date = Date()
     @FocusState private var editFocused: Bool
     @State private var isHovering: Bool = false
 
@@ -19,7 +23,11 @@ struct TaskRowView: View {
 
     var body: some View {
         Group {
-            if isEditing {
+            if isSettingDeadline {
+                deadlineEditor
+            } else if editingFirstStep {
+                firstStepEditor
+            } else if isEditing {
                 editingRow
             } else {
                 displayRow
@@ -43,17 +51,31 @@ struct TaskRowView: View {
             .ripple(trigger: completing, color: AppTheme.accentTeal)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(task.title)
-                    .font(.system(size: 13))
-                    .lineLimit(2)
-                    .foregroundStyle(AppTheme.textPrimary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .onTapGesture(count: 2) {
-                        draft = task.title
-                        onBeginEdit()
-                        editFocused = true
+                HStack(spacing: 6) {
+                    Text(task.title)
+                        .font(.system(size: 13))
+                        .lineLimit(2)
+                        .foregroundStyle(AppTheme.textPrimary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .onTapGesture(count: 2) {
+                            draft = task.title
+                            onBeginEdit()
+                            editFocused = true
+                        }
+                        .contentShape(Rectangle())
+
+                    if let framing = task.framing {
+                        framingBadge(for: framing)
                     }
-                    .contentShape(Rectangle())
+                }
+
+                if let firstStep = task.firstStep, !firstStep.isEmpty {
+                    Text("1. \(firstStep)")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(AppTheme.accentTeal)
+                        .lineLimit(1)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
 
                 if let link = task.linkAttachments.first {
                     linkChip(for: link)
@@ -67,6 +89,7 @@ struct TaskRowView: View {
             Spacer(minLength: 0)
 
             sizeMenu
+            framingMenu
 
             if let dueDate = task.dueDate {
                 Text(dueDate, style: .date)
@@ -93,6 +116,67 @@ struct TaskRowView: View {
                 .fill(rowBackground)
         )
         .onHover { isHovering = $0 }
+    }
+
+    /// FR-13: one small glyph reflecting the attached framing, text-free to
+    /// avoid row clutter. ⚡ for quickWin, ⏭ for doFirstNextSession.
+    private func framingBadge(for framing: TaskFraming) -> some View {
+        Image(systemName: framing == .quickWin ? "bolt.fill" : "forward.end.fill")
+            .font(.system(size: 10, weight: .semibold))
+            .foregroundStyle(framingColor(for: framing))
+            .help(framingHelp(for: framing))
+    }
+
+    private func framingColor(for framing: TaskFraming) -> Color {
+        switch framing {
+        case .quickWin: return AppTheme.accentTeal
+        case .doFirstNextSession: return AppTheme.accentViolet
+        }
+    }
+
+    private func framingHelp(for framing: TaskFraming) -> String {
+        switch framing {
+        case .quickWin: return "Quick win — surfaces first in What now"
+        case .doFirstNextSession: return "Do first next session"
+        }
+    }
+
+    /// FR-13: the "..." context menu holding the three framing levers plus the
+    /// FR-15 "add first step" action. All single-tap, no sub-forms.
+    private var framingMenu: some View {
+        Menu {
+            Button("Set a deadline") {
+                setDeadline()
+            }
+            Divider()
+            Button(task.framing == .quickWin ? "Unmark quick win" : "Mark as quick win") {
+                toggleFraming(.quickWin)
+            }
+            Button(task.framing == .quickWin ? "Do first next session →" : "Do first next session") {
+                setFraming(.doFirstNextSession)
+            }
+            if task.framing == .doFirstNextSession {
+                Button("Clear 'do first'") {
+                    setFraming(nil)
+                }
+            }
+            Divider()
+            Button(firstStepExists ? "Edit first step…" : "Add first step…") {
+                beginFirstStepEdit()
+            }
+        } label: {
+            Image(systemName: "ellipsis")
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundStyle(AppTheme.textSecondary)
+        }
+        .menuStyle(.borderlessButton)
+        .menuIndicator(.hidden)
+        .fixedSize()
+        .help("Task options")
+    }
+
+    private var firstStepExists: Bool {
+        (task.firstStep ?? "").isEmpty == false
     }
 
     private var rowBackground: Color {
@@ -192,6 +276,71 @@ struct TaskRowView: View {
         }
     }
 
+    private var firstStepEditor: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("First tiny step")
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(AppTheme.textSecondary)
+            TextField("e.g. Open the doc and write one sentence", text: $stepDraft)
+                .textFieldStyle(.roundedBorder)
+                .font(.system(size: 12))
+                .onSubmit {
+                    commitFirstStep()
+                }
+                .onExitCommand {
+                    editingFirstStep = false
+                    onEndEdit()
+                }
+            HStack {
+                Button("Save") { commitFirstStep() }
+                    .buttonStyle(.borderedProminent)
+                    .tint(AppTheme.accentTeal)
+                Button("Clear") {
+                    stepDraft = ""
+                    commitFirstStep()
+                }
+                .buttonStyle(.bordered)
+                Spacer()
+            }
+        }
+        .padding(.vertical, 6)
+        .padding(.horizontal, 10)
+        .onAppear { editFocused = true }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var deadlineEditor: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Self-imposed deadline")
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(AppTheme.textSecondary)
+            DatePicker("",
+                       selection: $deadlineDraft,
+                       displayedComponents: [.date, .hourAndMinute])
+                .labelsHidden()
+                .textFieldStyle(.roundedBorder)
+            HStack {
+                Button("Set") { commitDeadline() }
+                    .buttonStyle(.borderedProminent)
+                    .tint(AppTheme.accentTeal)
+                if task.dueDate != nil {
+                    Button("Clear") {
+                        var updated = task
+                        updated.dueDate = nil
+                        taskStore.update(updated)
+                        isSettingDeadline = false
+                        onEndEdit()
+                    }
+                    .buttonStyle(.bordered)
+                }
+                Spacer()
+            }
+        }
+        .padding(.vertical, 6)
+        .padding(.horizontal, 10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
     private var editingRow: some View {
         TextField("Task title", text: $draft)
             .textFieldStyle(.roundedBorder)
@@ -234,6 +383,54 @@ struct TaskRowView: View {
             taskStore.update(updated)
         }
         onEndEdit()
+    }
+
+    // MARK: - Framing (FR-13)
+
+    /// quickWin is a toggle: setting it when already set clears it.
+    private func toggleFraming(_ framing: TaskFraming) {
+        var updated = task
+        updated.framing = (task.framing == framing) ? nil : framing
+        taskStore.update(updated)
+    }
+
+    private func setFraming(_ framing: TaskFraming?) {
+        var updated = task
+        updated.framing = framing
+        taskStore.update(updated)
+    }
+
+    // MARK: - First step (FR-15)
+
+    private func beginFirstStepEdit() {
+        stepDraft = task.firstStep ?? ""
+        editingFirstStep = true
+        onBeginEdit()
+    }
+
+    private func commitFirstStep() {
+        let trimmed = stepDraft.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed != (task.firstStep ?? "") {
+            var updated = task
+            updated.firstStep = trimmed.isEmpty ? nil : trimmed
+            taskStore.update(updated)
+        }
+        editingFirstStep = false
+        onEndEdit()
+    }
+
+    private func commitDeadline() {
+        var updated = task
+        updated.dueDate = deadlineDraft
+        taskStore.update(updated)
+        isSettingDeadline = false
+        onEndEdit()
+    }
+
+    private func setDeadline() {
+        deadlineDraft = task.dueDate ?? Date()
+        isSettingDeadline = true
+        onBeginEdit()
     }
 }
 

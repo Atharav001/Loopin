@@ -35,10 +35,10 @@ final class TimerEngine: ObservableObject {
 
     // MARK: - Actions
 
-    func startFocus() {
+    func startFocus(linkedTaskId: UUID? = nil) {
         guard let preset = session.activePreset else { return }
         session.phase = .focus
-        session.linkedTaskId = nil
+        session.linkedTaskId = linkedTaskId
         session.isPaused = false
         beginPhase(duration: TimeInterval(preset.focusMinutes) * 60)
     }
