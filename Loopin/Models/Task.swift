@@ -1,0 +1,52 @@
+import Foundation
+
+enum TaskSize: String, Codable, Equatable, CaseIterable {
+    case big
+    case medium
+    case small
+}
+
+enum TaskFraming: String, Codable, Equatable {
+    case quickWin
+    case doFirstNextSession
+}
+
+struct Task: Identifiable, Codable, Equatable {
+    let id: UUID
+    var title: String
+    var isComplete: Bool
+    var createdAt: Date
+    var dueDate: Date?
+    var linkAttachments: [LinkAttachment]
+    var imageAttachments: [ImageAttachment]
+    var size: TaskSize?
+    var sortOrder: Int
+    var framing: TaskFraming?
+    var firstStep: String?
+
+    init(
+        id: UUID = UUID(),
+        title: String,
+        isComplete: Bool = false,
+        createdAt: Date = Date(),
+        dueDate: Date? = nil,
+        linkAttachments: [LinkAttachment] = [],
+        imageAttachments: [ImageAttachment] = [],
+        size: TaskSize? = nil,
+        sortOrder: Int = 0,
+        framing: TaskFraming? = nil,
+        firstStep: String? = nil
+    ) {
+        self.id = id
+        self.title = title
+        self.isComplete = isComplete
+        self.createdAt = createdAt
+        self.dueDate = dueDate
+        self.linkAttachments = linkAttachments
+        self.imageAttachments = imageAttachments
+        self.size = size
+        self.sortOrder = sortOrder
+        self.framing = framing
+        self.firstStep = firstStep
+    }
+}

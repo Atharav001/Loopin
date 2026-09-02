@@ -1,0 +1,462 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		02A308D3CBB28DA27CA06208 /* TimerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89236AB65F034F58B461058C /* TimerSession.swift */; };
+		063572ADAB63F44356C1CD5B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 70EC711E0685BD6ECA060B3C /* Assets.xcassets */; };
+		196F5E32CD226F1091A37397 /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1F01E7DC19CFAB4E606546 /* FloatingPanel.swift */; };
+		1ADC2160624AA75E6E37DF9C /* TaskStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF7570BDCDA32523C2D980B /* TaskStore.swift */; };
+		22F28D2053C7A0094E351FB5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DFEDEF6A0E529755B36A1F /* SettingsView.swift */; };
+		2864F715034428BC79A92A88 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADCBB8659A61DCEB93F29F6 /* Task.swift */; };
+		29583C4AD7949E4608DB792A /* PanelRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B78E550F13D6ACF7259ABA63 /* PanelRootView.swift */; };
+		314551571C5DCDB5438645D2 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57066882BE8BFA26A1033DC8 /* SettingsStore.swift */; };
+		33CFB48B559AE7F296827CD1 /* TimerPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = C208F505AACC6185FB7BE6EE /* TimerPreset.swift */; };
+		3577F14EFE4483DB69FED1BC /* WhatNowSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 641AEC6B40CAAC3236C80630 /* WhatNowSelector.swift */; };
+		35FA90C4FADA3A0A5DB26B1E /* LoopinApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BD1A0C09EBEE1795DE3800 /* LoopinApp.swift */; };
+		51AD07DE972C48C8FCAB927A /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8E2CF138C2517C551655FB /* StatusBarController.swift */; };
+		5AD76EDF1398D000DB5FB1D9 /* GlowModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED716ECE623EFADB4DA1C5F /* GlowModifier.swift */; };
+		5E1C1AA7DD8C509C388CDA61 /* TaskListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 182FC1DE9A9464D2D57889C9 /* TaskListView.swift */; };
+		6F0579120AFEB66939246C1B /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB1C312E7A7B6DA195626C5 /* Attachment.swift */; };
+		7B5A19E90281CE5FA42C7464 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD828DF28C65B0E3A765753A /* AppDelegate.swift */; };
+		7EEC1EDBE33157AA6BA4D844 /* CaptureClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D1E539F517262075A7649F /* CaptureClassifier.swift */; };
+		9B232B459593D0DB365E5435 /* RippleModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15C2630FA35D89C75D46F0C /* RippleModifier.swift */; };
+		9B9387CE57F02A617767D97F /* QuickAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772E2AE17DD023B5FE832F80 /* QuickAddView.swift */; };
+		A4BAA7410BA7CF424E5F1E93 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12A583D7EA72DEA17EF51DF /* AppSettings.swift */; };
+		ACB51DFB3EE32D054CDC95BD /* JSONStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A06D2B1B5FEF58BCB1748F /* JSONStore.swift */; };
+		B9949F547469D7976F143583 /* TaskRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F0D32FE67C38200F7A5064 /* TaskRowView.swift */; };
+		C3CC1C11DE44D5B03EF04D50 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22704C2071AAD2B4D5444BBF /* TimerView.swift */; };
+		CEA1C34CC797A23DF198998F /* UserFacingStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383AB9E797BEC0529B4C7CBC /* UserFacingStrings.swift */; };
+		CEC8B02294A85A1CC7AD9FD2 /* PanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C44CE744FD7380AAA576C6 /* PanelController.swift */; };
+		D7C924A21ACE7A9BA5F6E027 /* TimerEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CB464A92968234ADFF3F95 /* TimerEngine.swift */; };
+		F7DE6BA9292B05242DB77B65 /* ReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40AE63778D63586EF5F6E19 /* ReminderScheduler.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0CB1C312E7A7B6DA195626C5 /* Attachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
+		182FC1DE9A9464D2D57889C9 /* TaskListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListView.swift; sourceTree = "<group>"; };
+		1ADCBB8659A61DCEB93F29F6 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
+		22704C2071AAD2B4D5444BBF /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
+		2ED716ECE623EFADB4DA1C5F /* GlowModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlowModifier.swift; sourceTree = "<group>"; };
+		383AB9E797BEC0529B4C7CBC /* UserFacingStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFacingStrings.swift; sourceTree = "<group>"; };
+		3C9787B69D0C2D3FE661ECF4 /* Loopin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Loopin.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		41A06D2B1B5FEF58BCB1748F /* JSONStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONStore.swift; sourceTree = "<group>"; };
+		55C44CE744FD7380AAA576C6 /* PanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelController.swift; sourceTree = "<group>"; };
+		57066882BE8BFA26A1033DC8 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
+		5B1F01E7DC19CFAB4E606546 /* FloatingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanel.swift; sourceTree = "<group>"; };
+		63F0D32FE67C38200F7A5064 /* TaskRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRowView.swift; sourceTree = "<group>"; };
+		641AEC6B40CAAC3236C80630 /* WhatNowSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatNowSelector.swift; sourceTree = "<group>"; };
+		67D1E539F517262075A7649F /* CaptureClassifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureClassifier.swift; sourceTree = "<group>"; };
+		68CB464A92968234ADFF3F95 /* TimerEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerEngine.swift; sourceTree = "<group>"; };
+		6DF7570BDCDA32523C2D980B /* TaskStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskStore.swift; sourceTree = "<group>"; };
+		70EC711E0685BD6ECA060B3C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		772E2AE17DD023B5FE832F80 /* QuickAddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAddView.swift; sourceTree = "<group>"; };
+		83DFEDEF6A0E529755B36A1F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		89236AB65F034F58B461058C /* TimerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerSession.swift; sourceTree = "<group>"; };
+		B40AE63778D63586EF5F6E19 /* ReminderScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderScheduler.swift; sourceTree = "<group>"; };
+		B78E550F13D6ACF7259ABA63 /* PanelRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelRootView.swift; sourceTree = "<group>"; };
+		C208F505AACC6185FB7BE6EE /* TimerPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerPreset.swift; sourceTree = "<group>"; };
+		DB8E2CF138C2517C551655FB /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
+		E3BD1A0C09EBEE1795DE3800 /* LoopinApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoopinApp.swift; sourceTree = "<group>"; };
+		F12A583D7EA72DEA17EF51DF /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		F15C2630FA35D89C75D46F0C /* RippleModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RippleModifier.swift; sourceTree = "<group>"; };
+		FD828DF28C65B0E3A765753A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		1F2F53B6594823B6709657B9 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				70EC711E0685BD6ECA060B3C /* Assets.xcassets */,
+				383AB9E797BEC0529B4C7CBC /* UserFacingStrings.swift */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		27C178A171A2E480C4CB5D55 /* Engines */ = {
+			isa = PBXGroup;
+			children = (
+				67D1E539F517262075A7649F /* CaptureClassifier.swift */,
+				B40AE63778D63586EF5F6E19 /* ReminderScheduler.swift */,
+				68CB464A92968234ADFF3F95 /* TimerEngine.swift */,
+				641AEC6B40CAAC3236C80630 /* WhatNowSelector.swift */,
+			);
+			path = Engines;
+			sourceTree = "<group>";
+		};
+		41E3ABF4686D7DA7A5F3D16F /* App */ = {
+			isa = PBXGroup;
+			children = (
+				FD828DF28C65B0E3A765753A /* AppDelegate.swift */,
+				5B1F01E7DC19CFAB4E606546 /* FloatingPanel.swift */,
+				55C44CE744FD7380AAA576C6 /* PanelController.swift */,
+				DB8E2CF138C2517C551655FB /* StatusBarController.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		42056E7BDC33003D9B76154C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				6FF54E96558B56AB2FD59EA2 /* Components */,
+				B78E550F13D6ACF7259ABA63 /* PanelRootView.swift */,
+				772E2AE17DD023B5FE832F80 /* QuickAddView.swift */,
+				83DFEDEF6A0E529755B36A1F /* SettingsView.swift */,
+				182FC1DE9A9464D2D57889C9 /* TaskListView.swift */,
+				63F0D32FE67C38200F7A5064 /* TaskRowView.swift */,
+				22704C2071AAD2B4D5444BBF /* TimerView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6A20474EEB2EC92F989ED0EC /* Stores */ = {
+			isa = PBXGroup;
+			children = (
+				41A06D2B1B5FEF58BCB1748F /* JSONStore.swift */,
+				57066882BE8BFA26A1033DC8 /* SettingsStore.swift */,
+				6DF7570BDCDA32523C2D980B /* TaskStore.swift */,
+			);
+			path = Stores;
+			sourceTree = "<group>";
+		};
+		6FF54E96558B56AB2FD59EA2 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				2ED716ECE623EFADB4DA1C5F /* GlowModifier.swift */,
+				F15C2630FA35D89C75D46F0C /* RippleModifier.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		B858D6F92B611F6FB01C1E02 = {
+			isa = PBXGroup;
+			children = (
+				41E3ABF4686D7DA7A5F3D16F /* App */,
+				27C178A171A2E480C4CB5D55 /* Engines */,
+				E58DF3E3844443A460D0B95F /* Models */,
+				1F2F53B6594823B6709657B9 /* Resources */,
+				6A20474EEB2EC92F989ED0EC /* Stores */,
+				42056E7BDC33003D9B76154C /* Views */,
+				E3BD1A0C09EBEE1795DE3800 /* LoopinApp.swift */,
+				F981EDDDF15C38A582B54312 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E58DF3E3844443A460D0B95F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F12A583D7EA72DEA17EF51DF /* AppSettings.swift */,
+				0CB1C312E7A7B6DA195626C5 /* Attachment.swift */,
+				1ADCBB8659A61DCEB93F29F6 /* Task.swift */,
+				C208F505AACC6185FB7BE6EE /* TimerPreset.swift */,
+				89236AB65F034F58B461058C /* TimerSession.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F981EDDDF15C38A582B54312 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3C9787B69D0C2D3FE661ECF4 /* Loopin.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2AD7979CA19B886708B6BC4F /* Loopin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EAB625025DF76C7EF70EB037 /* Build configuration list for PBXNativeTarget "Loopin" */;
+			buildPhases = (
+				8256E028044954CC18368E3A /* Sources */,
+				1B326B0F3E0981186B75EA91 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Loopin;
+			packageProductDependencies = (
+			);
+			productName = Loopin;
+			productReference = 3C9787B69D0C2D3FE661ECF4 /* Loopin.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D625B639650E4355B812F2F5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					2AD7979CA19B886708B6BC4F = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 56890A142A6BEACED52E8F83 /* Build configuration list for PBXProject "Loopin" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = B858D6F92B611F6FB01C1E02;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = F981EDDDF15C38A582B54312 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2AD7979CA19B886708B6BC4F /* Loopin */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1B326B0F3E0981186B75EA91 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				063572ADAB63F44356C1CD5B /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8256E028044954CC18368E3A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B5A19E90281CE5FA42C7464 /* AppDelegate.swift in Sources */,
+				A4BAA7410BA7CF424E5F1E93 /* AppSettings.swift in Sources */,
+				6F0579120AFEB66939246C1B /* Attachment.swift in Sources */,
+				7EEC1EDBE33157AA6BA4D844 /* CaptureClassifier.swift in Sources */,
+				196F5E32CD226F1091A37397 /* FloatingPanel.swift in Sources */,
+				5AD76EDF1398D000DB5FB1D9 /* GlowModifier.swift in Sources */,
+				ACB51DFB3EE32D054CDC95BD /* JSONStore.swift in Sources */,
+				35FA90C4FADA3A0A5DB26B1E /* LoopinApp.swift in Sources */,
+				CEC8B02294A85A1CC7AD9FD2 /* PanelController.swift in Sources */,
+				29583C4AD7949E4608DB792A /* PanelRootView.swift in Sources */,
+				9B9387CE57F02A617767D97F /* QuickAddView.swift in Sources */,
+				F7DE6BA9292B05242DB77B65 /* ReminderScheduler.swift in Sources */,
+				9B232B459593D0DB365E5435 /* RippleModifier.swift in Sources */,
+				314551571C5DCDB5438645D2 /* SettingsStore.swift in Sources */,
+				22F28D2053C7A0094E351FB5 /* SettingsView.swift in Sources */,
+				51AD07DE972C48C8FCAB927A /* StatusBarController.swift in Sources */,
+				2864F715034428BC79A92A88 /* Task.swift in Sources */,
+				5E1C1AA7DD8C509C388CDA61 /* TaskListView.swift in Sources */,
+				B9949F547469D7976F143583 /* TaskRowView.swift in Sources */,
+				1ADC2160624AA75E6E37DF9C /* TaskStore.swift in Sources */,
+				D7C924A21ACE7A9BA5F6E027 /* TimerEngine.swift in Sources */,
+				33CFB48B559AE7F296827CD1 /* TimerPreset.swift in Sources */,
+				02A308D3CBB28DA27CA06208 /* TimerSession.swift in Sources */,
+				C3CC1C11DE44D5B03EF04D50 /* TimerView.swift in Sources */,
+				CEA1C34CC797A23DF198998F /* UserFacingStrings.swift in Sources */,
+				3577F14EFE4483DB69FED1BC /* WhatNowSelector.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0E5F39AAB2AD40571820C4E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		6A0702EE63EEBC12FE1652CB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.loopin.app;
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		84EAE1F645A23210EF178F89 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.loopin.app;
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		E7424D020BEE927A5AEFF2C9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		56890A142A6BEACED52E8F83 /* Build configuration list for PBXProject "Loopin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E7424D020BEE927A5AEFF2C9 /* Debug */,
+				0E5F39AAB2AD40571820C4E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		EAB625025DF76C7EF70EB037 /* Build configuration list for PBXNativeTarget "Loopin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A0702EE63EEBC12FE1652CB /* Debug */,
+				84EAE1F645A23210EF178F89 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D625B639650E4355B812F2F5 /* Project object */;
+}
