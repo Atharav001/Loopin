@@ -1,14 +1,44 @@
 import Foundation
 
 enum JSONStore {
-    private static let directoryName = "Focus"
+    /// Storage directory name under Application Support. Was "Focus" (the
+    /// placeholder app name from PRD §7); renamed to match the shipped app
+    /// "Loopin". A one-time migration in `migrateLegacyDirectory()` carries
+    /// any pre-existing user data across.
+    private static let directoryName = "Loopin"
+    private static let legacyDirectoryName = "Focus"
     private static let imagesDirectoryName = "Images"
 
     static var directory: URL {
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
         let dir = base.appendingPathComponent(directoryName, isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        migrateLegacyDirectory(base: base, current: dir)
         return dir
+    }
+
+    /// One-time migration: if a legacy "Focus" directory exists and the new
+    /// "Loopin" directory does not yet carry that data, move the legacy files
+    /// over so users don't lose settings/tasks across the rename.
+    private static func migrateLegacyDirectory(base: URL, current: URL) {
+        let fm = FileManager.default
+        let legacy = base.appendingPathComponent(legacyDirectoryName, isDirectory: true)
+        guard fm.fileExists(atPath: legacy.path) else { return }
+        guard let legacyItems = try? fm.contentsOfDirectory(atPath: legacy.path), !legacyItems.isEmpty else {
+            // Empty legacy dir: nothing to migrate.
+            return
+        }
+        for item in legacyItems {
+            let src = legacy.appendingPathComponent(item)
+            let dst = current.appendingPathComponent(item)
+            // Never overwrite something the user created in the new location.
+            if fm.fileExists(atPath: dst.path) { continue }
+            try? fm.moveItem(at: src, to: dst)
+        }
+        // Remove the legacy directory only once it's emptied.
+        if let remaining = try? fm.contentsOfDirectory(atPath: legacy.path), remaining.isEmpty {
+            try? fm.removeItem(at: legacy)
+        }
     }
 
     static var imagesDirectory: URL {

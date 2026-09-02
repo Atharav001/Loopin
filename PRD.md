@@ -238,4 +238,4 @@ Each requirement has an ID (used in DESIGN.md and should be used in commit messa
 
 - **DECISION NEEDED:** Local persistence mechanism — DESIGN.md defaults to a simple JSON-on-disk store for v1 simplicity (see DESIGN.md §Data Layer) rather than SwiftData/CoreData, to keep the build simple for a lower-capability build agent. Confirm this is acceptable, or explicitly request SwiftData if you want cleaner future migration.
 - **DECISION NEEDED:** Minimum macOS version target. DESIGN.md assumes macOS 14+ (Sonoma) to get modern SwiftUI APIs. Lower this only if you need to support older Macs, which will require AppKit fallbacks for some SwiftUI-only APIs referenced in DESIGN.md.
-- **DECISION NEEDED:** App name/bundle identifier/icon — placeholder "Focus" used throughout; replace before Phase 0 scaffold if you have a real name chosen.
+- **DECISION MADE:** App name/bundle identifier/icon — renamed from placeholder "Focus" to **Loopin** (bundle `com.loopin.app`) in Phase 0. On disk, the Application Support storage directory was renamed `Focus` → `Loopin` in Phase 9 via a one-time migration that carries existing user data across.
