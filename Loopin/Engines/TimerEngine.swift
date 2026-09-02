@@ -117,15 +117,17 @@ final class TimerEngine: ObservableObject {
     }
 
     /// Recomputes the current phase's total duration from the (possibly edited)
-    /// active preset. Preserves elapsed progress proportionally.
+    /// active preset. A mid-session preset change must not retroactively
+    /// truncate the running cycle (FR-6.4) — it takes effect on the next cycle
+    /// boundary. So this only ever EXTENDS a running phase (if the preset grew);
+    /// it never cuts remaining time short.
     func synchronizeWithPreset() {
         guard session.phase != .idle else { return }
         let newDuration = durationForCurrentPhase
-        guard newDuration > 0 else { return }
+        guard newDuration > currentDuration else { return }
+        let added = newDuration - currentDuration
         currentDuration = newDuration
-        if session.remainingSeconds > newDuration {
-            session.remainingSeconds = newDuration
-        }
+        session.remainingSeconds += added
     }
 
     // MARK: - Internals
