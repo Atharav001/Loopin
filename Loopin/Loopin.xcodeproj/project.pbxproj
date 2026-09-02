@@ -30,12 +30,14 @@
 		ACB51DFB3EE32D054CDC95BD /* JSONStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A06D2B1B5FEF58BCB1748F /* JSONStore.swift */; };
 		B2A0CF64CEF681991CA84B77 /* PanelBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AB1D6F3E8315851F7A024D /* PanelBridge.swift */; };
 		B9949F547469D7976F143583 /* TaskRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F0D32FE67C38200F7A5064 /* TaskRowView.swift */; };
+		BAE1803F640F57B07C76F53D /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445E8D0C6044CCCEDD07C5B2 /* AppState.swift */; };
 		BBFD4FA744FFCDF5F8121C5A /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AAC3DDACBBEC09698F596 /* Color+Hex.swift */; };
 		C3CC1C11DE44D5B03EF04D50 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22704C2071AAD2B4D5444BBF /* TimerView.swift */; };
 		CEA1C34CC797A23DF198998F /* UserFacingStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383AB9E797BEC0529B4C7CBC /* UserFacingStrings.swift */; };
 		CEC8B02294A85A1CC7AD9FD2 /* PanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C44CE744FD7380AAA576C6 /* PanelController.swift */; };
 		D7C924A21ACE7A9BA5F6E027 /* TimerEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CB464A92968234ADFF3F95 /* TimerEngine.swift */; };
 		F7DE6BA9292B05242DB77B65 /* ReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40AE63778D63586EF5F6E19 /* ReminderScheduler.swift */; };
+		FF9B1EE7B541CC60C5B5CAB8 /* LinkMetadataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEA6A061270B0E9555ADA0D1 /* LinkMetadataFetcher.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +49,7 @@
 		383AB9E797BEC0529B4C7CBC /* UserFacingStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFacingStrings.swift; sourceTree = "<group>"; };
 		3C9787B69D0C2D3FE661ECF4 /* Loopin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Loopin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41A06D2B1B5FEF58BCB1748F /* JSONStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONStore.swift; sourceTree = "<group>"; };
+		445E8D0C6044CCCEDD07C5B2 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		55C44CE744FD7380AAA576C6 /* PanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelController.swift; sourceTree = "<group>"; };
 		57066882BE8BFA26A1033DC8 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
 		5B1F01E7DC19CFAB4E606546 /* FloatingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanel.swift; sourceTree = "<group>"; };
@@ -65,6 +68,7 @@
 		C208F505AACC6185FB7BE6EE /* TimerPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerPreset.swift; sourceTree = "<group>"; };
 		C9AB1D6F3E8315851F7A024D /* PanelBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelBridge.swift; sourceTree = "<group>"; };
 		DB8E2CF138C2517C551655FB /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
+		DEA6A061270B0E9555ADA0D1 /* LinkMetadataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkMetadataFetcher.swift; sourceTree = "<group>"; };
 		E3BD1A0C09EBEE1795DE3800 /* LoopinApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoopinApp.swift; sourceTree = "<group>"; };
 		F12A583D7EA72DEA17EF51DF /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		F15C2630FA35D89C75D46F0C /* RippleModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RippleModifier.swift; sourceTree = "<group>"; };
@@ -85,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				67D1E539F517262075A7649F /* CaptureClassifier.swift */,
+				DEA6A061270B0E9555ADA0D1 /* LinkMetadataFetcher.swift */,
 				B40AE63778D63586EF5F6E19 /* ReminderScheduler.swift */,
 				68CB464A92968234ADFF3F95 /* TimerEngine.swift */,
 				641AEC6B40CAAC3236C80630 /* WhatNowSelector.swift */,
@@ -96,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				FD828DF28C65B0E3A765753A /* AppDelegate.swift */,
+				445E8D0C6044CCCEDD07C5B2 /* AppState.swift */,
 				5B1F01E7DC19CFAB4E606546 /* FloatingPanel.swift */,
 				C9AB1D6F3E8315851F7A024D /* PanelBridge.swift */,
 				55C44CE744FD7380AAA576C6 /* PanelController.swift */,
@@ -244,12 +250,14 @@
 			files = (
 				7B5A19E90281CE5FA42C7464 /* AppDelegate.swift in Sources */,
 				A4BAA7410BA7CF424E5F1E93 /* AppSettings.swift in Sources */,
+				BAE1803F640F57B07C76F53D /* AppState.swift in Sources */,
 				6F0579120AFEB66939246C1B /* Attachment.swift in Sources */,
 				7EEC1EDBE33157AA6BA4D844 /* CaptureClassifier.swift in Sources */,
 				BBFD4FA744FFCDF5F8121C5A /* Color+Hex.swift in Sources */,
 				196F5E32CD226F1091A37397 /* FloatingPanel.swift in Sources */,
 				5AD76EDF1398D000DB5FB1D9 /* GlowModifier.swift in Sources */,
 				ACB51DFB3EE32D054CDC95BD /* JSONStore.swift in Sources */,
+				FF9B1EE7B541CC60C5B5CAB8 /* LinkMetadataFetcher.swift in Sources */,
 				35FA90C4FADA3A0A5DB26B1E /* LoopinApp.swift in Sources */,
 				B2A0CF64CEF681991CA84B77 /* PanelBridge.swift in Sources */,
 				CEC8B02294A85A1CC7AD9FD2 /* PanelController.swift in Sources */,

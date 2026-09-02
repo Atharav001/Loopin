@@ -5,17 +5,18 @@ import Combine
 final class PanelController {
     private let panel: FloatingPanel
     private let settingsStore: SettingsStore
-    private let bridge = PanelBridge()
-    private var cancellables = Set<AnyCancellable>()
+
+    let bridge: PanelBridge
 
     var isVisible: Bool { panel.isVisible }
 
-    init(settingsStore: SettingsStore) {
+    init(settingsStore: SettingsStore, panelBridge: PanelBridge) {
         self.settingsStore = settingsStore
+        self.bridge = panelBridge
+        self.bridge.isPinned = settingsStore.settings.pinnedByDefault
 
         let panel = FloatingPanel()
         self.panel = panel
-        self.bridge.isPinned = settingsStore.settings.pinnedByDefault
 
         if let frame = settingsStore.settings.panelFrame {
             panel.setFrame(frame, display: false)
@@ -29,12 +30,6 @@ final class PanelController {
             self?.togglePinned()
         }
 
-        let contentController = NSHostingController(
-            rootView: PanelRootView()
-                .environmentObject(bridge)
-        )
-        panel.contentViewController = contentController
-
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(windowDidMoveOrResize),
@@ -47,6 +42,16 @@ final class PanelController {
             name: NSWindow.didResizeNotification,
             object: panel
         )
+    }
+
+    func installRoot(appState: AppState) {
+        let contentController = NSHostingController(
+            rootView: PanelRootView()
+                .environmentObject(appState.settingsStore)
+                .environmentObject(appState.taskStore)
+                .environmentObject(appState.panelBridge)
+        )
+        panel.contentViewController = contentController
     }
 
     func show() {

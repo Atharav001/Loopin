@@ -23,6 +23,41 @@ final class TaskStore: ObservableObject {
         scheduleSave()
     }
 
+    /// Builds a Task from captured content. If a URL link is present, metadata
+    /// (page title, favicon) is fetched asynchronously and attached after the
+    /// task already exists — never blocks capture.
+    func add(from classified: ClassifiedContent) {
+        var task = Task(
+            title: classified.titleText,
+            dueDate: classified.dueDate
+        )
+        if let fileName = classified.imageFileName {
+            task.imageAttachments = [ImageAttachment(imageFileName: fileName)]
+        }
+        if let url = classified.url {
+            task.linkAttachments = [LinkAttachment(url: url)]
+        }
+        add(task)
+
+        guard let url = classified.url else { return }
+        let taskID = task.id
+        Swift.Task { [weak self] () async -> Void in
+            let metadata = await LinkMetadataFetcher.fetch(for: url)
+            guard let self else { return }
+            await self.apply(metadata: metadata, to: taskID)
+        }
+    }
+
+    @MainActor
+    private func apply(metadata: (title: String?, favicon: Data?), to id: UUID) {
+        guard let index = tasks.firstIndex(where: { $0.id == id }),
+              var current = tasks[index].linkAttachments.first else { return }
+        current.fetchedTitle = metadata.title ?? current.fetchedTitle
+        current.faviconData = metadata.favicon ?? current.faviconData
+        tasks[index].linkAttachments[0] = current
+        scheduleSave()
+    }
+
     func update(_ task: Task) {
         guard let index = tasks.firstIndex(where: { $0.id == task.id }) else { return }
         tasks[index] = task
