@@ -60,6 +60,19 @@ final class ReminderScheduler: NSObject {
         // Stage 1: pulse now.
         session.reminderPending = true
 
+        // Phase 15 (§6.1/6.4): Trigger full-screen attention overlay for session/timer end events
+        let event: AttentionEventType
+        switch phase {
+        case .focus: event = .focusEnded
+        case .breakShort, .breakLong: event = .breakEnded
+        case .timer: event = .timerEnded
+        case .idle: return
+        }
+        AttentionOverlayManager.shared.trigger(
+            event: event,
+            stimulationIntensity: settingsStore.settings.stimulationIntensity
+        )
+
         // Stage 2: escalate after the configured delay if still unacknowledged.
         stageTwoWork?.cancel()
         let delay = settingsStore.settings.reminderEscalationDelaySeconds

@@ -4,3 +4,5 @@ DerivedData/
 xcuserdata/
 .build/
 .swiftpm/
+build/
+Loopin/build/

@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import WidgetKit
 
 final class TaskStore: ObservableObject {
     @Published var tasks: [Task] = []
@@ -90,6 +91,7 @@ final class TaskStore: ObservableObject {
     func saveNow() {
         saveWorkItem?.cancel()
         JSONStore.save(tasks, to: tasksFile)
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     private func scheduleSave() {
@@ -97,6 +99,7 @@ final class TaskStore: ObservableObject {
         let item = DispatchWorkItem { [weak self] in
             guard let self else { return }
             JSONStore.save(self.tasks, to: self.tasksFile)
+            WidgetCenter.shared.reloadAllTimelines()
         }
         saveWorkItem = item
         saveQueue.asyncAfter(deadline: .now() + 0.5, execute: item)

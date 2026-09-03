@@ -52,12 +52,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .sink { [weak self] _ in self?.reminderScheduler?.acknowledge() }
             .store(in: &cancellables)
 
-        // Focus Interval Alarm (§3.3): the ONE place a loud distinct bell is always
-        // played regardless of stimulationIntensity, plus a dock cue and menu-bar
-        // pulse. Phase 15 upgrades this to the full-screen attention overlay.
-        panelController.alarmEngine.onAlarm = {
-            AttentionSoundPlayer.shared.playAlarmBell()
-            NSApp.requestUserAttention(.informationalRequest)
+        // Focus Interval Alarm (§3.3 & §6.1/6.4): triggers full-screen attention overlay
+        // with Accent Violet glow and "Interval check-in" card message.
+        panelController.alarmEngine.onAlarm = { [weak settingsStore] in
+            let intensity = settingsStore?.settings.stimulationIntensity ?? .standard
+            AttentionOverlayManager.shared.trigger(event: .alarmFired, stimulationIntensity: intensity)
             statusBarController.pulseForAlarm()
         }
     }

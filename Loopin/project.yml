@@ -31,3 +31,25 @@ targets:
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+
+  LoopinWidget:
+    type: app-extension
+    platform: macOS
+    sources:
+      - LoopinWidget
+      - Models/Task.swift
+      - Models/Attachment.swift
+      - Models/TimerSession.swift
+      - Models/TimerPreset.swift
+      - Stores/JSONStore.swift
+      - Views/Components/AppTheme.swift
+      - Views/Components/Color+Hex.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.loopin.app.widget
+        INFOPLIST_FILE: LoopinWidget/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "-"
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        SWIFT_VERSION: "5.0"
