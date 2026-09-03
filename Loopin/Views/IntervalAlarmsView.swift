@@ -1,38 +1,80 @@
 import SwiftUI
 
-/// Focus Interval Alarms surface (V1_IMPROVEMENTS §3). Full implementation
-/// (repeating metronome alarm + distinct sound) lands in Phase 12; Phase 10
-/// provides the placeholder panel with client state mirrored from settings.
+/// Focus Interval Alarms surface (V1_IMPROVEMENTS §3): pick ONE fixed interval,
+/// then Start/Stop a repeating metronome-style alarm independent of the
+/// Pomodoro/Timer window. State persists across relaunch (§3.4).
 struct IntervalAlarmsView: View {
-    @EnvironmentObject private var settingsStore: SettingsStore
+    @EnvironmentObject private var engine: FocusIntervalAlarmEngine
 
     var body: some View {
-        VStack(spacing: 14) {
-            Image(systemName: "bell.circle")
+        VStack(spacing: 16) {
+            Image(systemName: engine.isRunning ? "bell.badge.fill" : "bell.circle")
                 .font(.system(size: 30))
                 .foregroundStyle(AppTheme.accentViolet)
-            Text("Focus Interval Alarms")
-                .font(.system(size: 15, weight: .semibold))
+
+            Text("Repeating pause reminder")
+                .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(AppTheme.textPrimary)
-            Text(getStatusText())
-                .font(.system(size: 12))
-                .foregroundStyle(AppTheme.textSecondary)
-            Text("Repeating pause reminders, coming in this phase.")
+
+            intervalPicker
+
+            statusBadge
+
+            toggleButton
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    /// Fixed preset list from §3.1, rendered as a segmented control.
+    private var intervalPicker: some View {
+        Picker("Interval", selection: Binding(
+            get: { engine.intervalMinutes },
+            set: { minutes in
+                engine.setInterval(minutes: minutes)
+            }
+        )) {
+            ForEach(FocusIntervalAlarmEngine.intervalChoices, id: \.self) { minutes in
+                Text("\(minutes)").tag(minutes)
+            }
+        }
+        .labelsHidden()
+        .pickerStyle(.segmented)
+        .frame(maxWidth: 300)
+        .disabled(engine.isRunning)
+    }
+
+    private var statusBadge: some View {
+        HStack(spacing: 6) {
+            Circle()
+                .fill(engine.isRunning ? AppTheme.accentViolet : AppTheme.textSecondary.opacity(0.5))
+                .frame(width: 7, height: 7)
+            Text(engine.isRunning
+                ? "Alarm every \(engine.intervalMinutes) min"
+                : "Idle — pick an interval and start")
                 .font(.system(size: 11))
                 .foregroundStyle(AppTheme.textSecondary)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    private func getStatusText() -> String {
-        let alarm = settingsStore.settings.focusIntervalAlarm
-        let running = alarm.isRunning ? "running" : "idle"
-        return "Interval: \(alarm.intervalMinutes) min · \(running)"
+    private var toggleButton: some View {
+        Button {
+            engine.isRunning ? engine.stop() : engine.start()
+        } label: {
+            Label(
+                engine.isRunning ? "Stop" : "Start",
+                systemImage: engine.isRunning ? "stop.fill" : "play.fill"
+            )
+            .frame(minWidth: 140)
+        }
+        .buttonStyle(.borderedProminent)
+        .tint(engine.isRunning ? AppTheme.accentCoral : AppTheme.accentViolet)
+        .foregroundStyle(Color.black)
     }
 }
 
 #Preview {
     IntervalAlarmsView()
+        .environmentObject(FocusIntervalAlarmEngine(settingsStore: SettingsStore()))
         .environmentObject(SettingsStore())
         .background(AppTheme.background)
 }

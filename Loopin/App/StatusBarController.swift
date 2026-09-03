@@ -72,6 +72,26 @@ final class StatusBarController: NSObject {
         NSApp.terminate(nil)
     }
 
+    /// Brief, self-clearing pulse shown when a Focus Interval Alarm fires
+    /// (§3.3 "menu bar pulse" component of the attention system). Independent of
+    /// the Pomodoro reminder's `reminderPending` pulse.
+    func pulseForAlarm() {
+        guard let button = statusItem.button else { return }
+        button.image?.isTemplate = false
+        button.contentTintColor = NSColor(hex: "#9B7BFF") // Accent Violet
+        startPulse(on: button, variant: .c)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) { [weak self] in
+            guard let self else { return }
+            if !self.timerSession.reminderPending {
+                self.refreshIcon()
+            } else {
+                self.stopPulse(on: button)
+                button.image?.isTemplate = false
+                button.contentTintColor = NSColor(hex: "#3DDC97")
+            }
+        }
+    }
+
     func refreshIcon() {
         let pending = timerSession.reminderPending
         switch timerSession.phase {

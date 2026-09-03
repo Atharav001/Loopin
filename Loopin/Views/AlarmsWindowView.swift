@@ -32,4 +32,5 @@ struct AlarmsWindowView: View {
         .environmentObject(TaskStore())
         .environmentObject(TimerEngine(session: TimerSession()))
         .environmentObject(TimerSession())
+        .environmentObject(FocusIntervalAlarmEngine(settingsStore: SettingsStore()))
 }

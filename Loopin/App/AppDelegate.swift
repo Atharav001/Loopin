@@ -51,6 +51,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         NotificationCenter.default.publisher(for: .panelDidOpen)
             .sink { [weak self] _ in self?.reminderScheduler?.acknowledge() }
             .store(in: &cancellables)
+
+        // Focus Interval Alarm (§3.3): the ONE place a loud distinct bell is always
+        // played regardless of stimulationIntensity, plus a dock cue and menu-bar
+        // pulse. Phase 15 upgrades this to the full-screen attention overlay.
+        panelController.alarmEngine.onAlarm = {
+            AttentionSoundPlayer.shared.playAlarmBell()
+            NSApp.requestUserAttention(.informationalRequest)
+            statusBarController.pulseForAlarm()
+        }
     }
 
     func applicationWillTerminate(_ notification: Notification) {

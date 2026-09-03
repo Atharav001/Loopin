@@ -10,6 +10,7 @@
 		02A308D3CBB28DA27CA06208 /* TimerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89236AB65F034F58B461058C /* TimerSession.swift */; };
 		063572ADAB63F44356C1CD5B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 70EC711E0685BD6ECA060B3C /* Assets.xcassets */; };
 		11502CABC5B53C2FE7F314EE /* WhatNowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBC5C344A39BBA83D039AF7E /* WhatNowView.swift */; };
+		187C2EAF4E835B70089142B2 /* AttentionSoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECF81859136B6241F95D426 /* AttentionSoundPlayer.swift */; };
 		196F5E32CD226F1091A37397 /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1F01E7DC19CFAB4E606546 /* FloatingPanel.swift */; };
 		1ADC2160624AA75E6E37DF9C /* TaskStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF7570BDCDA32523C2D980B /* TaskStore.swift */; };
 		20CE0DF01DF9FA41712A3FA7 /* TimerWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2F4798C5F6235BB4E27356 /* TimerWindowView.swift */; };
@@ -20,6 +21,7 @@
 		33CFB48B559AE7F296827CD1 /* TimerPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = C208F505AACC6185FB7BE6EE /* TimerPreset.swift */; };
 		3577F14EFE4483DB69FED1BC /* WhatNowSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 641AEC6B40CAAC3236C80630 /* WhatNowSelector.swift */; };
 		35FA90C4FADA3A0A5DB26B1E /* LoopinApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BD1A0C09EBEE1795DE3800 /* LoopinApp.swift */; };
+		40CA877FE48F0F1E1B753A68 /* FocusIntervalAlarmEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA24D736BB02DE1A64255784 /* FocusIntervalAlarmEngine.swift */; };
 		4990DD5718F7A90DA483DDE3 /* PresenceGlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5301C43C20C5A80F9E6D459 /* PresenceGlowView.swift */; };
 		51AD07DE972C48C8FCAB927A /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8E2CF138C2517C551655FB /* StatusBarController.swift */; };
 		5AD76EDF1398D000DB5FB1D9 /* GlowModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED716ECE623EFADB4DA1C5F /* GlowModifier.swift */; };
@@ -85,11 +87,13 @@
 		DB8E2CF138C2517C551655FB /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		DC7E287388E8C8DA0A3985C8 /* AlarmsWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmsWindowView.swift; sourceTree = "<group>"; };
 		DEA6A061270B0E9555ADA0D1 /* LinkMetadataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkMetadataFetcher.swift; sourceTree = "<group>"; };
+		DECF81859136B6241F95D426 /* AttentionSoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttentionSoundPlayer.swift; sourceTree = "<group>"; };
 		E3BD1A0C09EBEE1795DE3800 /* LoopinApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoopinApp.swift; sourceTree = "<group>"; };
 		E5301C43C20C5A80F9E6D459 /* PresenceGlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenceGlowView.swift; sourceTree = "<group>"; };
 		EDC17C12A92C1B075915F78D /* IntervalAlarmsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntervalAlarmsView.swift; sourceTree = "<group>"; };
 		F12A583D7EA72DEA17EF51DF /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		F15C2630FA35D89C75D46F0C /* RippleModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RippleModifier.swift; sourceTree = "<group>"; };
+		FA24D736BB02DE1A64255784 /* FocusIntervalAlarmEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusIntervalAlarmEngine.swift; sourceTree = "<group>"; };
 		FD828DF28C65B0E3A765753A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -106,7 +110,9 @@
 		27C178A171A2E480C4CB5D55 /* Engines */ = {
 			isa = PBXGroup;
 			children = (
+				DECF81859136B6241F95D426 /* AttentionSoundPlayer.swift */,
 				67D1E539F517262075A7649F /* CaptureClassifier.swift */,
+				FA24D736BB02DE1A64255784 /* FocusIntervalAlarmEngine.swift */,
 				DEA6A061270B0E9555ADA0D1 /* LinkMetadataFetcher.swift */,
 				B40AE63778D63586EF5F6E19 /* ReminderScheduler.swift */,
 				68CB464A92968234ADFF3F95 /* TimerEngine.swift */,
@@ -281,9 +287,11 @@
 				BAE1803F640F57B07C76F53D /* AppState.swift in Sources */,
 				822F7A87F56D6BF5A86FD3EF /* AppTheme.swift in Sources */,
 				6F0579120AFEB66939246C1B /* Attachment.swift in Sources */,
+				187C2EAF4E835B70089142B2 /* AttentionSoundPlayer.swift in Sources */,
 				7EEC1EDBE33157AA6BA4D844 /* CaptureClassifier.swift in Sources */,
 				BBFD4FA744FFCDF5F8121C5A /* Color+Hex.swift in Sources */,
 				196F5E32CD226F1091A37397 /* FloatingPanel.swift in Sources */,
+				40CA877FE48F0F1E1B753A68 /* FocusIntervalAlarmEngine.swift in Sources */,
 				5AD76EDF1398D000DB5FB1D9 /* GlowModifier.swift in Sources */,
 				8739886547844E2856ED5D22 /* IntervalAlarmsView.swift in Sources */,
 				ACB51DFB3EE32D054CDC95BD /* JSONStore.swift in Sources */,

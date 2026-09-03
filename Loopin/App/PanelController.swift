@@ -13,6 +13,8 @@ final class PanelController {
 
     /// Access for AppDelegate/ReminderScheduler wiring (single source of truth).
     var timerEngine: TimerEngine { appState.timerEngine }
+    /// Access for AppDelegate attention wiring (single source of truth).
+    var alarmEngine: FocusIntervalAlarmEngine { appState.alarmEngine }
 
     init(settingsStore: SettingsStore, taskStore: TaskStore, timerSession: TimerSession) {
         self.settingsStore = settingsStore
@@ -79,6 +81,7 @@ final class PanelController {
                 .environmentObject(bridge)
                 .environmentObject(appState.timerEngine)
                 .environmentObject(appState.timerSession)
+                .environmentObject(appState.alarmEngine)
             controller.installRoot(root)
         case .settings:
             let root = SettingsWindowView()
