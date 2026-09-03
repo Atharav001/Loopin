@@ -75,7 +75,7 @@ final class StatusBarController: NSObject {
     func refreshIcon() {
         let pending = timerSession.reminderPending
         switch timerSession.phase {
-        case .focus:
+        case .focus, .timer:
             iconState = .focusRunning
         case .breakShort, .breakLong:
             iconState = .breakRunning

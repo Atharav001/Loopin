@@ -92,6 +92,7 @@ final class ReminderScheduler: NSObject {
         switch phase {
         case .focus: title = "Focus session done"
         case .breakShort, .breakLong: title = "Break's over"
+        case .timer: title = "Time's up"
         case .idle: return
         }
 

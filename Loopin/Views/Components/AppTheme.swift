@@ -18,6 +18,7 @@ enum AppTheme {
         switch phase {
         case .focus: return accentTeal
         case .breakShort, .breakLong: return accentCoral
+        case .timer: return accentViolet
         case .idle: return textSecondary
         }
     }
