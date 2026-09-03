@@ -13,6 +13,22 @@ final class SettingsStore: ObservableObject {
     init() {
         let saved = JSONStore.load(AppSettings.self, from: settingsFile)
         settings = saved ?? .default
+        migrateWindowFrames()
+        scheduleSave()
+    }
+
+    /// One-time migration (V1_IMPROVEMENTS §7): the singular `panelFrame` is
+    /// replaced by the per-window `windowFrames` dictionary. If a legacy frame
+    /// exists (from the To-Do list effectively being "the app" before the
+    /// multi-window change), seed `windowFrames["todo"]` from it.
+    private func migrateWindowFrames() {
+        guard let legacy = settings.panelFrame else { return }
+        guard let current = settings.windowFrames["todo"] else {
+            settings.windowFrames["todo"] = legacy
+            scheduleSave()
+            return
+        }
+        _ = current
     }
 
     func saveNow() {

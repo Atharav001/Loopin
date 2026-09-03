@@ -5,7 +5,6 @@ import UserNotifications
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusBarController: StatusBarController?
     private var panelController: PanelController?
-    private var appState: AppState?
     private var reminderScheduler: ReminderScheduler?
     private var cancellables = Set<AnyCancellable>()
 
@@ -13,21 +12,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let settingsStore = SettingsStore()
         let taskStore = TaskStore()
         let timerSession = TimerSession()
-        let panelBridge = PanelBridge()
 
         let panelController = PanelController(
             settingsStore: settingsStore,
-            panelBridge: panelBridge
-        )
-        let appState = AppState(
-            settingsStore: settingsStore,
             taskStore: taskStore,
-            panelBridge: panelBridge,
             timerSession: timerSession
         )
-        self.appState = appState
-
-        panelController.installRoot(appState: appState)
         self.panelController = panelController
 
         let statusBarController = StatusBarController(
@@ -46,7 +36,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // Reminder escalation (FR-7).
         let scheduler = ReminderScheduler(
             session: timerSession,
-            engine: appState.timerEngine,
+            engine: panelController.timerEngine,
             settingsStore: settingsStore,
             taskStore: taskStore
         )
@@ -57,16 +47,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         ReminderScheduler.registerCategories()
         center.requestAuthorization(options: [.alert, .sound]) { _, _ in }
 
-        // Opening the panel acknowledges any pending reminder.
+        // Opening any window acknowledges any pending reminder.
         NotificationCenter.default.publisher(for: .panelDidOpen)
             .sink { [weak self] _ in self?.reminderScheduler?.acknowledge() }
             .store(in: &cancellables)
     }
 
     func applicationWillTerminate(_ notification: Notification) {
-        panelController?.saveFrame()
-        appState?.taskStore.saveNow()
-        appState?.settingsStore.saveNow()
+        panelController?.saveAllOnTerminate()
     }
 }
 

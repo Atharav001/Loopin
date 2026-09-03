@@ -35,10 +35,13 @@ struct Task: Identifiable, Codable, Equatable {
     var dueDate: Date?
     var linkAttachments: [LinkAttachment]
     var imageAttachments: [ImageAttachment]
+    var fileAttachments: [FileAttachment]
     var size: TaskSize?
     var sortOrder: Int
     var framing: TaskFraming?
     var firstStep: String?
+    var isImportant: Bool
+    var colorTag: TaskColorTag?
 
     init(
         id: UUID = UUID(),
@@ -48,10 +51,13 @@ struct Task: Identifiable, Codable, Equatable {
         dueDate: Date? = nil,
         linkAttachments: [LinkAttachment] = [],
         imageAttachments: [ImageAttachment] = [],
+        fileAttachments: [FileAttachment] = [],
         size: TaskSize? = nil,
         sortOrder: Int = 0,
         framing: TaskFraming? = nil,
-        firstStep: String? = nil
+        firstStep: String? = nil,
+        isImportant: Bool = false,
+        colorTag: TaskColorTag? = nil
     ) {
         self.id = id
         self.title = title
@@ -60,9 +66,12 @@ struct Task: Identifiable, Codable, Equatable {
         self.dueDate = dueDate
         self.linkAttachments = linkAttachments
         self.imageAttachments = imageAttachments
+        self.fileAttachments = fileAttachments
         self.size = size
         self.sortOrder = sortOrder
         self.framing = framing
         self.firstStep = firstStep
+        self.isImportant = isImportant
+        self.colorTag = colorTag
     }
 }

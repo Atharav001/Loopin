@@ -1,114 +1,90 @@
 import AppKit
 import SwiftUI
-import Combine
 
-extension Notification.Name {
-    static let panelDidOpen = Notification.Name("Loopin.panelDidOpen")
-}
-
+/// Manages the N independent FloatingPanel windows (V1_IMPROVEMENTS §1).
+/// Each `WindowController` owns its own panel, pin bridge, and persisted
+/// frame/pin state. Selection/forwarding from the menu bar routes here.
 final class PanelController {
-    private let panel: FloatingPanel
+    private var windows: [WindowKind: WindowController] = [:]
     private let settingsStore: SettingsStore
+    private let taskStore: TaskStore
+    private let timerSession: TimerSession
+    private let appState: AppState
 
-    let bridge: PanelBridge
+    /// Access for AppDelegate/ReminderScheduler wiring (single source of truth).
+    var timerEngine: TimerEngine { appState.timerEngine }
 
-    var isVisible: Bool { panel.isVisible }
-
-    init(settingsStore: SettingsStore, panelBridge: PanelBridge) {
+    init(settingsStore: SettingsStore, taskStore: TaskStore, timerSession: TimerSession) {
         self.settingsStore = settingsStore
-        self.bridge = panelBridge
-        self.bridge.isPinned = settingsStore.settings.pinnedByDefault
-
-        let panel = FloatingPanel()
-        self.panel = panel
-
-        if let frame = settingsStore.settings.panelFrame {
-            panel.setFrame(frame, display: false)
-        }
-
-        if bridge.isPinned {
-            applyPinned()
-        }
-
-        bridge.onTogglePin = { [weak self] in
-            self?.togglePinned()
-        }
-
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(windowDidMoveOrResize),
-            name: NSWindow.didMoveNotification,
-            object: panel
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(windowDidMoveOrResize),
-            name: NSWindow.didResizeNotification,
-            object: panel
+        self.taskStore = taskStore
+        self.timerSession = timerSession
+        self.appState = AppState(
+            settingsStore: settingsStore,
+            taskStore: taskStore,
+            timerSession: timerSession
         )
     }
 
-    func installRoot(appState: AppState) {
-        let contentController = NSHostingController(
-            rootView: PanelRootView()
-                .environmentObject(appState.settingsStore)
-                .environmentObject(appState.taskStore)
-                .environmentObject(appState.panelBridge)
+    /// Opens (or brings to front) the window for `kind`. Lazy-builds on first use.
+    func focus(_ kind: WindowKind) {
+        window(for: kind).focus()
+    }
+
+    /// Saves frames of all currently-open windows.
+    func saveFrames() {
+        for controller in windows.values {
+            controller.saveFrameIfVisible()
+        }
+    }
+
+    /// Final persistence flush on app termination (DESIGN §5: debounce is not a
+    /// substitute for save-on-terminate).
+    func saveAllOnTerminate() {
+        saveFrames()
+        taskStore.saveNow()
+        settingsStore.saveNow()
+    }
+
+    private func window(for kind: WindowKind) -> WindowController {
+        if let existing = windows[kind] { return existing }
+        let controller = WindowController(kind: kind, settingsStore: settingsStore)
+        installContent(in: controller, for: kind)
+        windows[kind] = controller
+        return controller
+    }
+
+    private func installContent(in controller: WindowController, for kind: WindowKind) {
+        let bridge = controller.bridge
+        switch kind {
+        case .todo:
+            let root = TodoWindowView()
+                .environmentObject(settingsStore)
+                .environmentObject(taskStore)
+                .environmentObject(bridge)
                 .environmentObject(appState.timerEngine)
                 .environmentObject(appState.timerSession)
-        )
-        panel.contentViewController = contentController
-    }
-
-    func show() {
-        panel.makeKeyAndOrderFront(nil)
-        panel.orderFrontRegardless()
-        NotificationCenter.default.post(name: .panelDidOpen, object: nil)
-    }
-
-    func hide() {
-        panel.orderOut(nil)
-    }
-
-    func toggle() {
-        if panel.isVisible {
-            hide()
-        } else {
-            show()
+            controller.installRoot(root)
+        case .timer:
+            let root = TimerWindowView()
+                .environmentObject(settingsStore)
+                .environmentObject(taskStore)
+                .environmentObject(bridge)
+                .environmentObject(appState.timerEngine)
+                .environmentObject(appState.timerSession)
+            controller.installRoot(root)
+        case .alarms:
+            let root = AlarmsWindowView()
+                .environmentObject(settingsStore)
+                .environmentObject(taskStore)
+                .environmentObject(bridge)
+                .environmentObject(appState.timerEngine)
+                .environmentObject(appState.timerSession)
+            controller.installRoot(root)
+        case .settings:
+            let root = SettingsWindowView()
+                .environmentObject(settingsStore)
+                .environmentObject(bridge)
+            controller.installRoot(root)
         }
-    }
-
-    func setPinned(_ pinned: Bool) {
-        bridge.isPinned = pinned
-        settingsStore.settings.pinnedByDefault = pinned
-        settingsStore.saveNow()
-        if pinned {
-            applyPinned()
-        } else {
-            applyUnpinned()
-        }
-    }
-
-    func togglePinned() {
-        setPinned(!bridge.isPinned)
-    }
-
-    func saveFrame() {
-        settingsStore.settings.panelFrame = panel.frame
-        settingsStore.saveNow()
-    }
-
-    private func applyPinned() {
-        panel.level = .statusBar
-        panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]
-    }
-
-    private func applyUnpinned() {
-        panel.level = .normal
-        panel.collectionBehavior = [.moveToActiveSpace]
-    }
-
-    @objc private func windowDidMoveOrResize(_ notification: Notification) {
-        saveFrame()
     }
 }

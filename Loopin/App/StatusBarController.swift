@@ -7,6 +7,8 @@ enum MenuBarIconState {
     case breakRunning
 }
 
+/// Menu bar item. Clicking it now opens an NSMenu picker (V1_IMPROVEMENTS §1.1)
+/// that forwards to one of several independent windows, not a single panel.
 final class StatusBarController: NSObject {
     private let statusItem: NSStatusItem
     private let panelController: PanelController
@@ -27,8 +29,47 @@ final class StatusBarController: NSObject {
         button.wantsLayer = true
         button.image = iconImage(for: iconState)
         button.image?.isTemplate = true
-        button.target = self
-        button.action = #selector(togglePanel)
+
+        let menu = buildMenu()
+        statusItem.menu = menu
+        button.action = nil  // The menu is attached to the status item directly.
+    }
+
+    private func buildMenu() -> NSMenu {
+        let menu = NSMenu()
+
+        menu.addItem(menuItem(title: "To-Do List", kind: .todo))
+        menu.addItem(menuItem(title: "Pomodoro / Timer / Stopwatch", kind: .timer))
+        menu.addItem(menuItem(title: "Focus Interval Alarms", kind: .alarms))
+        menu.addItem(.separator())
+        menu.addItem(menuItem(title: "Settings", kind: .settings))
+        menu.addItem(.separator())
+
+        let quit = NSMenuItem(title: "Quit Loopin", action: #selector(quitApp), keyEquivalent: "q")
+        quit.target = self
+        menu.addItem(quit)
+
+        return menu
+    }
+
+    private func menuItem(title: String, kind: WindowKind) -> NSMenuItem {
+        let item = NSMenuItem(
+            title: title,
+            action: #selector(selectWindow(_:)),
+            keyEquivalent: ""
+        )
+        item.target = self
+        item.representedObject = kind
+        return item
+    }
+
+    @objc private func selectWindow(_ sender: NSMenuItem) {
+        guard let kind = sender.representedObject as? WindowKind else { return }
+        panelController.focus(kind)
+    }
+
+    @objc private func quitApp() {
+        NSApp.terminate(nil)
     }
 
     func refreshIcon() {
@@ -105,7 +146,6 @@ final class StatusBarController: NSObject {
         case .a:
             removeOpacityPulse(on: button)
         case .b:
-            // Opacity 0.6 ↔ 1.0.
             if button.layer?.animation(forKey: opacityAnimationKey) == nil {
                 let opacity = CABasicAnimation(keyPath: "opacity")
                 opacity.fromValue = 0.6
@@ -116,7 +156,6 @@ final class StatusBarController: NSObject {
                 button.layer?.add(opacity, forKey: opacityAnimationKey)
             }
         case .c:
-            // Combined scale + opacity, longer period.
             if button.layer?.animation(forKey: opacityAnimationKey) == nil {
                 let opacity = CABasicAnimation(keyPath: "opacity")
                 opacity.fromValue = 0.7
@@ -152,10 +191,6 @@ final class StatusBarController: NSObject {
             symbol = "cup.and.saucer.fill"
         }
         return NSImage(systemSymbolName: symbol, accessibilityDescription: "Loopin")
-    }
-
-    @objc private func togglePanel() {
-        panelController.toggle()
     }
 }
 
