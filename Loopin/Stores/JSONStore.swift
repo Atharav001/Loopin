@@ -8,6 +8,7 @@ enum JSONStore {
     private static let directoryName = "Loopin"
     private static let legacyDirectoryName = "Focus"
     private static let imagesDirectoryName = "Images"
+    private static let documentsDirectoryName = "Documents"
 
     static var directory: URL {
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
@@ -47,6 +48,13 @@ enum JSONStore {
         return dir
     }
 
+    /// Directory for generic (non-image) document attachments (§4.3).
+    static var documentsDirectory: URL {
+        let dir = directory.appendingPathComponent(documentsDirectoryName, isDirectory: true)
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        return dir
+    }
+
     static func load<T: Decodable>(_ type: T.Type, from file: String) -> T? {
         let url = directory.appendingPathComponent(file)
         guard let data = try? Data(contentsOf: url) else { return nil }
@@ -71,6 +79,22 @@ enum JSONStore {
 
     static func readImage(named fileName: String) -> Data? {
         let url = imagesDirectory.appendingPathComponent(fileName)
+        return try? Data(contentsOf: url)
+    }
+
+    /// Writes a generic document attachment (§4.3). Stores in Documents/.
+    static func writeAttachment(_ data: Data, named fileName: String) -> Bool {
+        let url = documentsDirectory.appendingPathComponent(fileName)
+        do {
+            try data.write(to: url, options: [.atomic])
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    static func readAttachment(named fileName: String) -> Data? {
+        let url = documentsDirectory.appendingPathComponent(fileName)
         return try? Data(contentsOf: url)
     }
 }

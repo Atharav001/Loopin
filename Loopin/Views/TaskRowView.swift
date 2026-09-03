@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import UniformTypeIdentifiers
 
 struct TaskRowView: View {
     @EnvironmentObject private var taskStore: TaskStore
@@ -8,6 +9,8 @@ struct TaskRowView: View {
     var isEditing: Bool
     var onBeginEdit: () -> Void
     var onEndEdit: () -> Void
+    /// Invoked when the user deletes the task (list wires delete-undo, §4.4.2).
+    var onDelete: (Task) -> Void = { _ in }
 
     @State private var draft: String = ""
     @State private var stepDraft: String = ""
@@ -38,24 +41,20 @@ struct TaskRowView: View {
 
     private var displayRow: some View {
         HStack(spacing: 8) {
-            Button {
-                complete()
-            } label: {
-                Image(systemName: completing ? "checkmark.circle.fill" : "circle")
-                    .font(.system(size: 15, weight: .medium))
-                    .foregroundStyle(completing ? AppTheme.accentTeal : AppTheme.textSecondary)
-            }
-            .buttonStyle(.plain)
-            .help("Mark done")
-            .disabled(completing)
-            .ripple(trigger: completing, color: AppTheme.accentTeal)
+            leadingMarker
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
+                    if let tag = task.colorTag {
+                        Circle()
+                            .fill(AppTheme.color(for: tag))
+                            .frame(width: 7, height: 7)
+                    }
                     Text(task.title)
                         .font(.system(size: 13))
                         .lineLimit(2)
-                        .foregroundStyle(AppTheme.textPrimary)
+                        .foregroundStyle(task.isComplete ? AppTheme.textSecondary : AppTheme.textPrimary)
+                        .strikethrough(task.isComplete)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .onTapGesture(count: 2) {
                             draft = task.title
@@ -77,6 +76,9 @@ struct TaskRowView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
+                if !task.fileAttachments.isEmpty {
+                    ForEach(task.fileAttachments) { fileAttachmentRow(for: $0) }
+                }
                 if let link = task.linkAttachments.first {
                     linkChip(for: link)
                 }
@@ -88,17 +90,74 @@ struct TaskRowView: View {
 
             Spacer(minLength: 0)
 
-            sizeMenu
-            framingMenu
-
             if let dueDate = task.dueDate {
-                Text(dueDate, style: .date)
-                    .font(.system(size: 11))
-                    .foregroundStyle(AppTheme.textSecondary)
+                dueBadge(for: dueDate)
             }
 
+            hoverActions
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(rowBackground)
+        )
+        .onHover { isHovering = $0 }
+        .onDrop(of: [.fileURL, .image, .url], isTargeted: Binding(
+            get: { dropTargeted },
+            set: { newValue in dropTargeted = newValue }
+        )) { providers in
+            handleRowDrop(providers)
+        }
+    }
+
+    /// Row shows a color-tag dot (§4.1), an icon-forward glyph when set and a
+    /// text-free checkbox otherwise; completed rows keep the same marker.
+    private var leadingMarker: some View {
+        HStack(spacing: 6) {
             Button {
-                taskStore.delete(id: task.id)
+                complete()
+            } label: {
+                Image(systemName: leadingSymbol)
+                    .font(.system(size: 15, weight: .medium))
+                    .foregroundStyle(leadingColor)
+            }
+            .buttonStyle(.plain)
+            .help("Mark done")
+            .disabled(completing)
+            .ripple(trigger: completing, color: AppTheme.accentTeal)
+        }
+    }
+
+    private var leadingSymbol: String {
+        if let icon = task.icon, !task.isComplete { return icon }
+        if task.isComplete { return "checkmark.circle.fill" }
+        return "circle"
+    }
+
+    private var leadingColor: Color {
+        if task.isComplete { return AppTheme.accentTeal }
+        if task.colorTag != nil { return AppTheme.color(for: task.colorTag!) }
+        return task.icon != nil ? AppTheme.accentViolet : AppTheme.textSecondary
+    }
+
+    /// Hover-revealed quick actions (§4.1): important star + delete.
+    private var hoverActions: some View {
+        HStack(spacing: 6) {
+            Button {
+                toggleImportant()
+            } label: {
+                Image(systemName: task.isImportant ? "star.fill" : "star")
+                    .font(.system(size: 11))
+                    .foregroundStyle(task.isImportant ? AppTheme.accentViolet : AppTheme.textSecondary)
+            }
+            .buttonStyle(.plain)
+            .opacity(isHovering ? 1 : 0)
+            .disabled(!isHovering)
+            .help(task.isImportant ? "Unmark important" : "Mark important")
+
+            Button {
+                onDelete(task)
             } label: {
                 Image(systemName: "xmark")
                     .font(.system(size: 10, weight: .semibold))
@@ -108,14 +167,36 @@ struct TaskRowView: View {
             .opacity(isHovering ? 1 : 0)
             .disabled(!isHovering)
             .help("Delete")
+
+            framingMenu
+                .opacity(isHovering ? 1 : 0)
+                .disabled(!isHovering)
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 10)
+    }
+
+    private func toggleImportant() {
+        var updated = task
+        updated.isImportant.toggle()
+        taskStore.update(updated)
+    }
+
+    /// §4.2.3 due date rendered as a small pill badge.
+    private func dueBadge(for date: Date) -> some View {
+        let overdue = date < Date() && !task.isComplete
+        return HStack(spacing: 3) {
+            Image(systemName: "calendar")
+                .font(.system(size: 9))
+            Text(date, style: .date)
+                .font(.system(size: 10))
+                .lineLimit(1)
+        }
+        .padding(.horizontal, 6)
+        .padding(.vertical, 2)
         .background(
-            RoundedRectangle(cornerRadius: 8)
-                .fill(rowBackground)
+            Capsule()
+                .fill(overdue ? AppTheme.accentCoral.opacity(0.18) : AppTheme.surface)
         )
-        .onHover { isHovering = $0 }
+        .foregroundStyle(overdue ? AppTheme.accentCoral : AppTheme.textSecondary)
     }
 
     /// FR-13: one small glyph reflecting the attached framing, text-free to
@@ -145,6 +226,47 @@ struct TaskRowView: View {
     /// FR-15 "add first step" action. All single-tap, no sub-forms.
     private var framingMenu: some View {
         Menu {
+            Menu {
+                ForEach(TaskColorTag.allCases) { tag in
+                    Button {
+                        setColorTag(tag)
+                    } label: {
+                        HStack {
+                            Circle()
+                                .fill(AppTheme.color(for: tag))
+                                .frame(width: 10, height: 10)
+                            Text(tag.label)
+                            if task.colorTag == tag {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+                if task.colorTag != nil {
+                    Divider()
+                    Button("Clear color") { setColorTag(nil) }
+                }
+            } label: {
+                Text("Color tag")
+            }
+
+            Menu {
+                ForEach(TaskIcon.allCases) { icon in
+                    Button {
+                        setIcon(icon.symbol)
+                    } label: {
+                        Label(icon.symbol, systemImage: icon.symbol)
+                            .foregroundStyle(AppTheme.accentViolet)
+                    }
+                }
+                if task.icon != nil {
+                    Divider()
+                    Button("Default checkbox") { setIcon(nil) }
+                }
+            } label: {
+                Text("Row icon")
+            }
+
             Button("Set a deadline") {
                 setDeadline()
             }
@@ -161,6 +283,22 @@ struct TaskRowView: View {
                 }
             }
             Divider()
+            Menu {
+                ForEach(TaskSize.allCases, id: \.self) { size in
+                    Button {
+                        setSize(size)
+                    } label: {
+                        Label(size.label, systemImage: "checkmark")
+                            .foregroundStyle(sizeColor(for: size))
+                    }
+                }
+                if task.size != nil {
+                    Divider()
+                    Button("Clear") { setSize(nil) }
+                }
+            } label: {
+                Text("Size")
+            }
             Button(firstStepExists ? "Edit first step…" : "Add first step…") {
                 beginFirstStepEdit()
             }
@@ -175,6 +313,26 @@ struct TaskRowView: View {
         .help("Task options")
     }
 
+    private func setColorTag(_ tag: TaskColorTag?) {
+        var updated = task
+        updated.colorTag = tag
+        taskStore.update(updated)
+    }
+
+    private func setIcon(_ symbol: String?) {
+        var updated = task
+        updated.icon = symbol
+        taskStore.update(updated)
+    }
+
+    private func sizeColor(for size: TaskSize) -> Color {
+        switch size {
+        case .big: return AppTheme.accentCoral
+        case .medium: return AppTheme.accentViolet
+        case .small: return AppTheme.accentTeal
+        }
+    }
+
     private var firstStepExists: Bool {
         (task.firstStep ?? "").isEmpty == false
     }
@@ -187,45 +345,6 @@ struct TaskRowView: View {
             return AppTheme.surface.opacity(1)
         }
         return AppTheme.surface
-    }
-
-    private var sizeMenu: some View {
-        Menu {
-            ForEach(TaskSize.allCases, id: \.self) { size in
-                Button {
-                    setSize(size)
-                } label: {
-                    if task.size == size {
-                        Label(size.label, systemImage: "checkmark")
-                    } else {
-                        Text(size.label)
-                    }
-                }
-            }
-            if task.size != nil {
-                Divider()
-                Button("Clear") { setSize(nil) }
-            }
-        } label: {
-            Image(systemName: task.size?.symbol ?? "tag")
-                .font(.system(size: 11))
-                .foregroundStyle(
-                    task.size != nil ? sizeColor : AppTheme.textSecondary
-                )
-        }
-        .menuStyle(.borderlessButton)
-        .menuIndicator(.hidden)
-        .fixedSize()
-        .help("Set task size")
-    }
-
-    private var sizeColor: Color {
-        switch task.size {
-        case .big: return AppTheme.accentCoral
-        case .medium: return AppTheme.accentViolet
-        case .small: return AppTheme.accentTeal
-        case nil: return AppTheme.textSecondary
-        }
     }
 
     private func setSize(_ size: TaskSize?) {
@@ -274,6 +393,96 @@ struct TaskRowView: View {
                     .foregroundStyle(AppTheme.textSecondary)
             }
         }
+    }
+
+    // MARK: - File attachment display (§4.3.1)
+
+    /// A non-image attachment renders inline as a file-type icon + filename,
+    /// in place of a bare text row.
+    private func fileAttachmentRow(for attachment: FileAttachment) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: fileTypeSymbol(for: attachment.fileTypeTag))
+                .font(.system(size: 11))
+                .foregroundStyle(AppTheme.accentViolet)
+            Text(attachment.fileName)
+                .font(.system(size: 11))
+                .lineLimit(1)
+                .truncationMode(.middle)
+                .foregroundStyle(AppTheme.textPrimary)
+        }
+        .padding(.horizontal, 6)
+        .padding(.vertical, 2)
+        .background(
+            Capsule()
+                .fill(AppTheme.surface)
+        )
+        .help("Attached: \(attachment.fileName)")
+    }
+
+    private func fileTypeSymbol(for tag: String) -> String {
+        switch tag.uppercased() {
+        case "PDF": return "doc.richtext"
+        case "PNG", "JPG", "JPEG", "HEIC": return "photo"
+        case "DOC", "DOCX": return "doc.text"
+        case "XLS", "XLSX", "CSV": return "tablecells"
+        case "PPT", "PPTX": return "chart.bar.doc.horizontal"
+        case "ZIP", "GZ": return "archivebox"
+        case "TXT", "MD": return "doc.plaintext"
+        default: return "doc"
+        }
+    }
+
+    // MARK: - Row-level attachment drop (§4.3.1)
+
+    @State private var dropTargeted = false
+
+    private func handleRowDrop(_ providers: [NSItemProvider]) -> Bool {
+        guard !task.isComplete else { return false }
+        for provider in providers {
+            if provider.hasItemConformingToTypeIdentifier(UTType.image.identifier) {
+                provider.loadDataRepresentation(forTypeIdentifier: UTType.png.identifier) { data, _ in
+                    guard let data else { return }
+                    let fileName = "\(UUID().uuidString).png"
+                    if JSONStore.writeImage(data, named: fileName) {
+                        DispatchQueue.main.async {
+                            attachImage(fileName)
+                        }
+                    }
+                }
+            } else if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
+                _ = provider.loadObject(ofClass: URL.self) { url, _ in
+                    guard let url, let data = try? Data(contentsOf: url) else { return }
+                    let originalName = url.lastPathComponent
+                    let storedName = "\(UUID().uuidString).\(url.pathExtension)"
+                    guard JSONStore.writeAttachment(data, named: storedName) else { return }
+                    let attachment = FileAttachment.make(fileName: originalName)
+                    DispatchQueue.main.async {
+                        attachFile(attachment)
+                    }
+                }
+            }
+        }
+        return true
+    }
+
+    private func attachImage(_ fileName: String) {
+        var updated = task
+        updated.imageAttachments.append(ImageAttachment(imageFileName: fileName))
+        // §4.3.3: if the task has no title, auto-fill from the filename.
+        if updated.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            updated.title = (fileName as NSString).deletingPathExtension
+        }
+        taskStore.update(updated)
+    }
+
+    private func attachFile(_ attachment: FileAttachment) {
+        var updated = task
+        updated.fileAttachments.append(attachment)
+        // §4.3.3: auto-fill an empty title from the filename (without extension).
+        if updated.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            updated.title = (attachment.fileName as NSString).deletingPathExtension
+        }
+        taskStore.update(updated)
     }
 
     private var firstStepEditor: some View {
@@ -342,22 +551,36 @@ struct TaskRowView: View {
     }
 
     private var editingRow: some View {
-        TextField("Task title", text: $draft)
-            .textFieldStyle(.roundedBorder)
-            .font(.system(size: 13))
-            .focused($editFocused)
-            .onSubmit {
-                commitEdit()
+        HStack(spacing: 6) {
+            TextField("Task title", text: $draft)
+                .textFieldStyle(.roundedBorder)
+                .font(.system(size: 13))
+                .focused($editFocused)
+                .onSubmit {
+                    commitEdit()
+                }
+                .onAppear { editFocused = true }
+                .onChange(of: editFocused) { _, focused in
+                    guard isEditing, !focused else { return }
+                    commitEdit()
+                }
+                .onExitCommand {
+                    onEndEdit()
+                }
+            // §4.3.2: a small non-editable type tag showing the attached file's type.
+            if let attachment = task.fileAttachments.first {
+                Text(attachment.fileTypeTag)
+                    .font(.system(size: 9, weight: .semibold))
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 1)
+                    .background(
+                        Capsule()
+                            .fill(AppTheme.neutralBadgeBackground)
+                    )
+                    .foregroundStyle(AppTheme.neutralBadgeText)
             }
-            .onAppear { editFocused = true }
-            .onChange(of: editFocused) { _, focused in
-                guard isEditing, !focused else { return }
-                commitEdit()
-            }
-            .onExitCommand {
-                onEndEdit()
-            }
-            .padding(.vertical, 2)
+        }
+        .padding(.vertical, 2)
     }
 
     private func complete() {

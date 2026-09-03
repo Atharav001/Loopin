@@ -42,6 +42,9 @@ struct Task: Identifiable, Codable, Equatable {
     var firstStep: String?
     var isImportant: Bool
     var colorTag: TaskColorTag?
+    /// Icon-forward row glyph (V1_IMPROVEMENTS §4.1): an SF Symbol name from a
+    /// small fixed set, or nil for the default checkbox.
+    var icon: String?
 
     init(
         id: UUID = UUID(),
@@ -57,7 +60,8 @@ struct Task: Identifiable, Codable, Equatable {
         framing: TaskFraming? = nil,
         firstStep: String? = nil,
         isImportant: Bool = false,
-        colorTag: TaskColorTag? = nil
+        colorTag: TaskColorTag? = nil,
+        icon: String? = nil
     ) {
         self.id = id
         self.title = title
@@ -73,5 +77,6 @@ struct Task: Identifiable, Codable, Equatable {
         self.firstStep = firstStep
         self.isImportant = isImportant
         self.colorTag = colorTag
+        self.icon = icon
     }
 }

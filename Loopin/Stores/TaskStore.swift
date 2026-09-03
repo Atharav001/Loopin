@@ -69,6 +69,19 @@ final class TaskStore: ObservableObject {
         scheduleSave()
     }
 
+    /// Restores a previously removed task (delete-undo, §4.4.2).
+    func restore(_ task: Task) {
+        guard !tasks.contains(where: { $0.id == task.id }) else { return }
+        tasks.append(task)
+        scheduleSave()
+    }
+
+    /// Permanently removes all completed tasks (§4.4.3).
+    func clearCompleted() {
+        tasks.removeAll { $0.isComplete }
+        scheduleSave()
+    }
+
     func move(fromOffsets: IndexSet, toOffset: Int) {
         tasks.move(fromOffsets: fromOffsets, toOffset: toOffset)
         scheduleSave()

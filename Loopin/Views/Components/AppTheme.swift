@@ -22,4 +22,16 @@ enum AppTheme {
         case .idle: return textSecondary
         }
     }
+
+    /// Color for a task's color tag (§4.1). `neutral` uses the muted badge color
+    /// so it reads as "no chroma" without a new palette entry.
+    static func color(for tag: TaskColorTag) -> Color {
+        switch tag {
+        case .teal: return accentTeal
+        case .coral: return accentCoral
+        case .violet: return accentViolet
+        case .amber: return Color(hex: "#F0B54A")
+        case .neutral: return textSecondary
+        }
+    }
 }
