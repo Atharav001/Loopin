@@ -95,6 +95,7 @@ final class TaskStore: ObservableObject {
     }
 
     private func scheduleSave() {
+        WidgetCenter.shared.reloadAllTimelines()
         saveWorkItem?.cancel()
         let item = DispatchWorkItem { [weak self] in
             guard let self else { return }
@@ -102,6 +103,6 @@ final class TaskStore: ObservableObject {
             WidgetCenter.shared.reloadAllTimelines()
         }
         saveWorkItem = item
-        saveQueue.asyncAfter(deadline: .now() + 0.5, execute: item)
+        saveQueue.asyncAfter(deadline: .now() + 0.3, execute: item)
     }
 }

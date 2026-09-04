@@ -41,17 +41,19 @@ struct TaskRowView: View {
 
     private var displayRow: some View {
         HStack(spacing: 8) {
+            if let tag = task.colorTag {
+                RoundedRectangle(cornerRadius: 2)
+                    .fill(AppTheme.color(for: tag))
+                    .frame(width: 4)
+                    .padding(.vertical, 4)
+            }
+
             leadingMarker
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
-                    if let tag = task.colorTag {
-                        Circle()
-                            .fill(AppTheme.color(for: tag))
-                            .frame(width: 7, height: 7)
-                    }
                     Text(task.title)
-                        .font(.system(size: 13))
+                        .font(.system(size: 13, weight: .medium))
                         .lineLimit(2)
                         .foregroundStyle(task.isComplete ? AppTheme.textSecondary : AppTheme.textPrimary)
                         .strikethrough(task.isComplete)
@@ -62,6 +64,28 @@ struct TaskRowView: View {
                             editFocused = true
                         }
                         .contentShape(Rectangle())
+
+                    if let attachment = task.fileAttachments.first {
+                        Text("[\(attachment.fileTypeTag)]")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundStyle(AppTheme.accentTeal)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(
+                                Capsule()
+                                    .fill(AppTheme.accentTeal.opacity(0.15))
+                            )
+                    } else if !task.imageAttachments.isEmpty {
+                        Text("[IMG]")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundStyle(AppTheme.accentViolet)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(
+                                Capsule()
+                                    .fill(AppTheme.accentViolet.opacity(0.15))
+                            )
+                    }
 
                     if let framing = task.framing {
                         framingBadge(for: framing)
@@ -99,8 +123,12 @@ struct TaskRowView: View {
         .padding(.vertical, 8)
         .padding(.horizontal, 10)
         .background(
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: 10)
                 .fill(rowBackground)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .strokeBorder(dropTargeted ? AppTheme.accentTeal : AppTheme.borderSubtle.opacity(0.6), lineWidth: dropTargeted ? 1.5 : 1)
+                )
         )
         .onHover { isHovering = $0 }
         .onDrop(of: [.fileURL, .image, .url], isTargeted: Binding(
@@ -554,7 +582,7 @@ struct TaskRowView: View {
         HStack(spacing: 6) {
             TextField("Task title", text: $draft)
                 .textFieldStyle(.roundedBorder)
-                .font(.system(size: 13))
+                .font(.system(size: 13, weight: .medium))
                 .focused($editFocused)
                 .onSubmit {
                     commitEdit()
@@ -567,17 +595,27 @@ struct TaskRowView: View {
                 .onExitCommand {
                     onEndEdit()
                 }
-            // §4.3.2: a small non-editable type tag showing the attached file's type.
+
             if let attachment = task.fileAttachments.first {
-                Text(attachment.fileTypeTag)
-                    .font(.system(size: 9, weight: .semibold))
-                    .padding(.horizontal, 5)
-                    .padding(.vertical, 1)
+                Text("[\(attachment.fileTypeTag)]")
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundStyle(AppTheme.accentTeal)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 3)
                     .background(
                         Capsule()
-                            .fill(AppTheme.neutralBadgeBackground)
+                            .fill(AppTheme.accentTeal.opacity(0.18))
                     )
-                    .foregroundStyle(AppTheme.neutralBadgeText)
+            } else if !task.imageAttachments.isEmpty {
+                Text("[IMG]")
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundStyle(AppTheme.accentViolet)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 3)
+                    .background(
+                        Capsule()
+                            .fill(AppTheme.accentViolet.opacity(0.18))
+                    )
             }
         }
         .padding(.vertical, 2)
@@ -587,8 +625,10 @@ struct TaskRowView: View {
         guard !completing else { return }
         completing = true
 
-        // Run the completion animation (ripple + teal flash) for ~300ms, then
-        // mark the task complete so it drops off the open list.
+        // Trigger attention celebration overlay glow
+        AttentionOverlayManager.shared.trigger(event: .taskCompleted)
+
+        // Run completion ripple animation before marking task complete
         Swift.Task { @MainActor in
             try? await Swift.Task.sleep(nanoseconds: 360_000_000)
             var updated = task

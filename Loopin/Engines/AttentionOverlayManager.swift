@@ -1,19 +1,41 @@
 import SwiftUI
 import AppKit
 
-/// Event type for full-screen attention overlay triggers (V1_IMPROVEMENTS §6.4).
+/// Event type for full-screen attention overlay triggers (ADHD Visual Attention System).
 enum AttentionEventType {
     case focusEnded
     case breakEnded
     case alarmFired
     case timerEnded
+    case taskCompleted
+
+    var emoji: String {
+        switch self {
+        case .focusEnded: return "⚡"
+        case .breakEnded: return "🚀"
+        case .alarmFired: return "🔔"
+        case .timerEnded: return "⏰"
+        case .taskCompleted: return "🎉"
+        }
+    }
 
     var title: String {
         switch self {
-        case .focusEnded: return "Focus session done"
-        case .breakEnded: return "Break's over — ready when you are"
-        case .alarmFired: return "Interval check-in"
-        case .timerEnded: return "Time's up"
+        case .focusEnded: return "FOCUS SESSION COMPLETED!"
+        case .breakEnded: return "BREAK HAS ENDED — READY?"
+        case .alarmFired: return "FOCUS INTERVAL CHECK-IN"
+        case .timerEnded: return "TIMER COUNTDOWN FINISHED"
+        case .taskCompleted: return "GREAT JOB! TASK COMPLETED"
+        }
+    }
+
+    var subtitle: String {
+        switch self {
+        case .focusEnded: return "Take a 10-minute break to recharge ☕️"
+        case .breakEnded: return "Time to get back to work and crush your next task!"
+        case .alarmFired: return "Refocus on your current task — stay on target 🎯"
+        case .timerEnded: return "Your set time duration has elapsed."
+        case .taskCompleted: return "Dopamine unlocked! Keep the momentum going."
         }
     }
 
@@ -22,12 +44,13 @@ enum AttentionEventType {
         case .focusEnded: return AppTheme.accentTeal
         case .breakEnded: return AppTheme.accentCoral
         case .alarmFired: return AppTheme.accentViolet
-        case .timerEnded: return AppTheme.accentTeal
+        case .timerEnded: return AppTheme.accentAmber
+        case .taskCompleted: return AppTheme.accentGreen
         }
     }
 }
 
-/// Borderless overlay window rendered over full-screen apps (§6.3).
+/// Borderless overlay window rendered over full-screen apps (YouTube, media players, browser).
 final class AttentionOverlayWindow: NSWindow {
     init(screen: NSScreen, event: AttentionEventType) {
         super.init(
@@ -36,62 +59,81 @@ final class AttentionOverlayWindow: NSWindow {
             backing: .buffered,
             defer: false
         )
-        // §6.5 checklist:
-        self.level = .screenSaver // Renders above full-screen spaces
+        self.level = .screenSaver // Renders ABOVE full-screen applications & spaces
         self.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary, .ignoresCycle]
         self.isOpaque = false
         self.backgroundColor = .clear
-        self.ignoresMouseEvents = true // CRITICAL: click-through, never intercepts input
+        self.ignoresMouseEvents = true // Click-through, never blocks input or typing
         self.hasShadow = false
         self.contentView = NSHostingView(rootView: AttentionOverlayView(event: event))
     }
 }
 
-/// SwiftUI visual effect: inset screen-edge glow + sliding message card (§6.4).
+/// SwiftUI visual effect: Inset multi-layer screen-edge neon glow + top sliding banner card.
 struct AttentionOverlayView: View {
     let event: AttentionEventType
     @State private var isVisible = false
+    @State private var pulseGlow = false
 
     var body: some View {
         ZStack(alignment: .top) {
-            // 1. Edge glow inset from four edges
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(event.glowColor.opacity(0.85), lineWidth: 12)
-                .shadow(color: event.glowColor.opacity(0.9), radius: 24, x: 0, y: 0)
-                .blur(radius: 4)
-                .padding(12)
-                .opacity(isVisible ? 1 : 0)
+            // 1. Multi-layered Screen-Edge Pulsing Neon Glow
+            ZStack {
+                // Outer intense border glow
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(event.glowColor.opacity(pulseGlow ? 0.95 : 0.4), lineWidth: 16)
+                    .shadow(color: event.glowColor.opacity(pulseGlow ? 1.0 : 0.6), radius: 36, x: 0, y: 0)
+                    .blur(radius: 6)
 
-            // 2. Sliding message pill card (top-center)
-            HStack(spacing: 8) {
-                Circle()
-                    .fill(event.glowColor)
-                    .frame(width: 8, height: 8)
-                Text(event.title)
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(AppTheme.textPrimary)
+                // Inner sharp accent outline
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(event.glowColor, lineWidth: 4)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
+            .padding(10)
+            .opacity(isVisible ? 1 : 0)
+            .scaleEffect(isVisible ? 1.0 : 1.02)
+
+            // 2. Unmissable Sliding Message Card (Top-Center)
+            HStack(spacing: 12) {
+                Text(event.emoji)
+                    .font(.system(size: 26))
+                    .scaleEffect(pulseGlow ? 1.15 : 1.0)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(event.title)
+                        .font(.system(size: 13, weight: .black))
+                        .foregroundStyle(event.glowColor)
+                        .tracking(0.5)
+
+                    Text(event.subtitle)
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(AppTheme.textPrimary)
+                }
+            }
+            .padding(.horizontal, 22)
+            .padding(.vertical, 14)
             .background(
                 Capsule()
-                    .fill(AppTheme.surface)
-                    .shadow(color: .black.opacity(0.4), radius: 8, x: 0, y: 4)
+                    .fill(AppTheme.background)
+                    .shadow(color: .black.opacity(0.6), radius: 14, x: 0, y: 6)
                     .overlay(
                         Capsule()
-                            .strokeBorder(event.glowColor.opacity(0.5), lineWidth: 1)
+                            .strokeBorder(event.glowColor.opacity(0.8), lineWidth: 2)
                     )
             )
-            .offset(y: isVisible ? 28 : -60)
+            .offset(y: isVisible ? 36 : -80)
             .opacity(isVisible ? 1 : 0)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
-            withAnimation(.easeOut(duration: 0.35)) {
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.75)) {
                 isVisible = true
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-                withAnimation(.easeIn(duration: 0.35)) {
+            withAnimation(.easeInOut(duration: 0.6).repeatForever(autoreverses: true)) {
+                pulseGlow = true
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.4) {
+                withAnimation(.easeIn(duration: 0.4)) {
                     isVisible = false
                 }
             }
@@ -99,7 +141,7 @@ struct AttentionOverlayView: View {
     }
 }
 
-/// Orchestrates multi-monitor full-screen attention overlays (§6.3–6.4).
+/// Orchestrates multi-monitor full-screen attention overlays across macOS.
 final class AttentionOverlayManager {
     static let shared = AttentionOverlayManager()
     private var activeWindows: [AttentionOverlayWindow] = []
@@ -111,22 +153,22 @@ final class AttentionOverlayManager {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
 
-            // Audio & Dock bounce per §6.4
+            // Audio chime & critical Dock icon bounce
             switch event {
             case .alarmFired:
-                // §3.3 & §6.4: Focus Interval Alarms ALWAYS play distinct louder bell
                 AttentionSoundPlayer.shared.playAlarmBell()
-            case .focusEnded, .breakEnded, .timerEnded:
+            case .focusEnded, .breakEnded, .timerEnded, .taskCompleted:
                 if stimulationIntensity != .gentle {
                     AttentionSoundPlayer.shared.playCycleEndChime()
                 }
             }
-            NSApp.requestUserAttention(.informationalRequest)
+            // Request critical user attention so Dock bounces continuously
+            NSApp.requestUserAttention(.criticalRequest)
 
-            // Dismiss any pre-existing overlay windows
+            // Dismiss existing overlay windows
             self.dismissWindows()
 
-            // Spawn one overlay window per active screen (§6.3)
+            // Spawn overlay window per active screen
             let screens = NSScreen.screens
             let windows = screens.map { screen in
                 AttentionOverlayWindow(screen: screen, event: event)
@@ -137,12 +179,12 @@ final class AttentionOverlayManager {
             }
             self.activeWindows = windows
 
-            // Auto-dismiss after 3.2s duration
+            // Auto-dismiss after 4.0s duration
             let work = DispatchWorkItem { [weak self] in
                 self?.dismissWindows()
             }
             self.dismissWorkItem = work
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.2, execute: work)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4.0, execute: work)
         }
     }
 
@@ -155,3 +197,4 @@ final class AttentionOverlayManager {
         activeWindows.removeAll()
     }
 }
+

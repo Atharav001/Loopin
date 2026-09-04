@@ -35,7 +35,7 @@ struct Provider: TimelineProvider {
     }
 }
 
-/// Read-only macOS desktop widget view (§5.3) displaying open tasks live.
+/// Read-only macOS desktop widget view displaying open tasks live with Memorigi styling.
 struct LoopinWidgetEntryView: View {
     var entry: Provider.Entry
 
@@ -46,43 +46,72 @@ struct LoopinWidgetEntryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text("Loopin Today")
-                    .font(.system(size: 12, weight: .bold))
-                    .foregroundStyle(AppTheme.accentTeal)
+                HStack(spacing: 5) {
+                    Circle()
+                        .fill(AppTheme.accentTeal)
+                        .frame(width: 6, height: 6)
+                    Text("Loopin Tasks")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundStyle(AppTheme.textPrimary)
+                }
                 Spacer()
-                Text("\(openTasks.count)")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(AppTheme.textSecondary)
+                Text("\(openTasks.count) open")
+                    .font(.system(size: 10, weight: .bold))
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(
+                        Capsule()
+                            .fill(AppTheme.accentViolet.opacity(0.2))
+                    )
+                    .foregroundStyle(AppTheme.accentViolet)
             }
             Divider()
+                .overlay(AppTheme.borderSubtle)
 
             if openTasks.isEmpty {
                 VStack {
                     Spacer()
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 20))
+                        .foregroundStyle(AppTheme.accentGreen)
                     Text("All clear for today!")
-                        .font(.system(size: 11))
+                        .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(AppTheme.textSecondary)
                     Spacer()
                 }
                 .frame(maxWidth: .infinity)
             } else {
-                VStack(alignment: .leading, spacing: 5) {
+                VStack(alignment: .leading, spacing: 6) {
                     ForEach(openTasks) { task in
                         HStack(spacing: 6) {
                             if let tag = task.colorTag {
-                                Circle()
+                                RoundedRectangle(cornerRadius: 1.5)
                                     .fill(AppTheme.color(for: tag))
-                                    .frame(width: 6, height: 6)
+                                    .frame(width: 3, height: 12)
                             } else {
                                 Image(systemName: "circle")
-                                    .font(.system(size: 10))
-                                    .foregroundStyle(AppTheme.textSecondary)
+                                    .font(.system(size: 9))
+                                    .foregroundStyle(AppTheme.accentTeal)
                             }
+
                             Text(task.title)
-                                .font(.system(size: 11))
+                                .font(.system(size: 11, weight: .medium))
                                 .lineLimit(1)
                                 .foregroundStyle(AppTheme.textPrimary)
-                            Spacer()
+
+                            Spacer(minLength: 0)
+
+                            if task.isImportant {
+                                Image(systemName: "star.fill")
+                                    .font(.system(size: 8))
+                                    .foregroundStyle(AppTheme.accentViolet)
+                            }
+
+                            if let attachment = task.fileAttachments.first {
+                                Text(attachment.fileTypeTag)
+                                    .font(.system(size: 8, weight: .bold))
+                                    .foregroundStyle(AppTheme.accentTeal)
+                            }
                         }
                     }
                 }

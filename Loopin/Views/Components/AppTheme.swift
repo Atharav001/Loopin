@@ -1,18 +1,23 @@
 import SwiftUI
 
-/// Central palette (DESIGN §9). Dark-first.
+/// Central palette matching Memorigi Android app aesthetics (Deep Midnight + Vibrant Accents).
 enum AppTheme {
-    static let background = Color(hex: "#121214")
-    static let surface = Color(hex: "#1B1B1F")
-    static let textPrimary = Color(hex: "#F2F2F5")
-    static let textSecondary = Color(hex: "#9A9AA2")
+    static let background = Color(hex: "#0D0F17")       // Memorigi deep midnight
+    static let surface = Color(hex: "#161928")          // Memorigi container surface
+    static let cardBackground = Color(hex: "#1E2235")   // Memorigi task card surface
+    static let borderSubtle = Color(hex: "#2A2F4A")     // Card border outline
 
-    static let accentTeal = Color(hex: "#3DDC97")     // Focus / pin default
-    static let accentCoral = Color(hex: "#FF7A6B")    // Break / reminder B
-    static let accentViolet = Color(hex: "#9B7BFF")   // Reminder C / pin-engaged
+    static let textPrimary = Color(hex: "#F5F6FA")
+    static let textSecondary = Color(hex: "#8E95B3")
 
-    static let neutralBadgeBackground = Color(hex: "#3A3A40")
-    static let neutralBadgeText = Color(hex: "#C8C8D0")
+    static let accentTeal = Color(hex: "#06B6D4")       // Memorigi Cyan Teal
+    static let accentViolet = Color(hex: "#8B5CF6")     // Memorigi Electric Violet
+    static let accentCoral = Color(hex: "#EC4899")      // Memorigi Neon Pink / Coral
+    static let accentAmber = Color(hex: "#F59E0B")      // Memorigi Warm Amber
+    static let accentGreen = Color(hex: "#10B981")      // Memorigi Emerald Green
+
+    static let neutralBadgeBackground = Color(hex: "#282C44")
+    static let neutralBadgeText = Color(hex: "#B0B7D0")
 
     static func color(for phase: TimerPhase) -> Color {
         switch phase {
@@ -23,14 +28,13 @@ enum AppTheme {
         }
     }
 
-    /// Color for a task's color tag (§4.1). `neutral` uses the muted badge color
-    /// so it reads as "no chroma" without a new palette entry.
+    /// Color for a task's color tag matching Memorigi list categories.
     static func color(for tag: TaskColorTag) -> Color {
         switch tag {
         case .teal: return accentTeal
         case .coral: return accentCoral
         case .violet: return accentViolet
-        case .amber: return Color(hex: "#F0B54A")
+        case .amber: return accentAmber
         case .neutral: return textSecondary
         }
     }

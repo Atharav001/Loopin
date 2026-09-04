@@ -62,12 +62,14 @@ struct TaskListView: View {
                 }
             }
         }
+        .animation(.spring(response: 0.35, dampingFraction: 0.75), value: taskStore.tasks)
         .background(
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: 12)
                 .strokeBorder(
                     isDropTarget ? AppTheme.accentTeal : Color.clear,
-                    lineWidth: 1.5
+                    lineWidth: 2
                 )
+                .shadow(color: isDropTarget ? AppTheme.accentTeal.opacity(0.5) : Color.clear, radius: 8)
         )
         .padding(4)
         .onDrop(of: [.image, .url, .fileURL], isTargeted: $isDropTarget) { providers in
@@ -290,9 +292,11 @@ struct TaskListView: View {
                     .font(.system(size: 11))
                     .foregroundStyle(AppTheme.textPrimary)
                 Button("Clear") {
-                    taskStore.clearCompleted()
-                    confirmingClear = false
-                    showingCompleted = false
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                        taskStore.clearCompleted()
+                        confirmingClear = false
+                        showingCompleted = false
+                    }
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(AppTheme.accentCoral)

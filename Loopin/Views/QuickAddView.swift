@@ -7,21 +7,28 @@ struct QuickAddView: View {
     @FocusState private var isFocused: Bool
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 10) {
             Image(systemName: "plus.circle.fill")
+                .font(.system(size: 18, weight: .bold))
                 .foregroundStyle(AppTheme.accentTeal)
 
-            TextField("Capture a thought…", text: $text)
+            TextField("Add a new task or drop a file…", text: $text)
                 .textFieldStyle(.plain)
                 .focused($isFocused)
                 .onSubmit(submit)
-                .font(.system(size: 13))
+                .font(.system(size: 13, weight: .medium))
                 .foregroundStyle(AppTheme.textPrimary)
         }
-        .padding(9)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
         .background(
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: 12)
                 .fill(AppTheme.surface)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .strokeBorder(isFocused ? AppTheme.accentTeal : AppTheme.borderSubtle, lineWidth: isFocused ? 1.5 : 1)
+                )
+                .shadow(color: isFocused ? AppTheme.accentTeal.opacity(0.3) : Color.clear, radius: 8)
         )
     }
 
