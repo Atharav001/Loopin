@@ -28,9 +28,9 @@ enum CaptureClassifier {
 
         // 2. URL type or link pattern via NSDataDetector.
         if let url = extractURL(from: pasteboard, text: rawText) {
-            let title = rawText.trimmingCharacters(in: .whitespacesAndNewlines)
+            let stripped = stripURL(from: rawText, url: url).trimmingCharacters(in: .whitespacesAndNewlines)
             return ClassifiedContent(
-                titleText: title.isEmpty ? (url.host?.isEmpty == false ? url.absoluteString : "Link") : title,
+                titleText: stripped,
                 url: url,
                 imageFileName: nil,
                 dueDate: nil,
@@ -56,9 +56,9 @@ enum CaptureClassifier {
     /// natural-language date and strips the date phrase from the title.
     static func classifyText(_ text: String) -> ClassifiedContent {
         if let url = extractURL(fromText: text) {
-            let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+            let stripped = stripURL(from: text, url: url).trimmingCharacters(in: .whitespacesAndNewlines)
             return ClassifiedContent(
-                titleText: trimmed.isEmpty ? url.absoluteString : trimmed,
+                titleText: stripped,
                 url: url,
                 imageFileName: nil,
                 dueDate: nil,
@@ -126,5 +126,13 @@ enum CaptureClassifier {
         let matchedRange = match.range
         text = nsText.replacingCharacters(in: matchedRange, with: "").trimmingCharacters(in: .whitespacesAndNewlines)
         return date
+    }
+
+    private static func stripURL(from text: String, url: URL) -> String {
+        var result = text.replacingOccurrences(of: url.absoluteString, with: "")
+        if let host = url.host {
+            result = result.replacingOccurrences(of: host, with: "")
+        }
+        return result.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }

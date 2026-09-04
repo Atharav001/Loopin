@@ -52,18 +52,31 @@ struct TaskRowView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
-                    Text(task.title)
-                        .font(.system(size: 13, weight: .medium))
-                        .lineLimit(2)
-                        .foregroundStyle(task.isComplete ? AppTheme.textSecondary : AppTheme.textPrimary)
-                        .strikethrough(task.isComplete)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .onTapGesture(count: 2) {
-                            draft = task.title
-                            onBeginEdit()
-                            editFocused = true
-                        }
-                        .contentShape(Rectangle())
+                    if let displayTitle = cleanDisplayTitle {
+                        Text(displayTitle)
+                            .font(.system(size: 13, weight: .medium))
+                            .lineLimit(2)
+                            .foregroundStyle(task.isComplete ? AppTheme.textSecondary : AppTheme.textPrimary)
+                            .strikethrough(task.isComplete)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .onTapGesture(count: 2) {
+                                draft = task.title
+                                onBeginEdit()
+                                editFocused = true
+                            }
+                            .contentShape(Rectangle())
+                    } else if task.linkAttachments.isEmpty && task.fileAttachments.isEmpty && task.imageAttachments.isEmpty {
+                        Text("Untitled Task")
+                            .font(.system(size: 13, weight: .medium))
+                            .foregroundStyle(AppTheme.textSecondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .onTapGesture(count: 2) {
+                                draft = ""
+                                onBeginEdit()
+                                editFocused = true
+                            }
+                            .contentShape(Rectangle())
+                    }
 
                     if let attachment = task.fileAttachments.first {
                         Text("[\(attachment.fileTypeTag)]")
@@ -169,19 +182,31 @@ struct TaskRowView: View {
         return task.icon != nil ? AppTheme.accentViolet : AppTheme.textSecondary
     }
 
-    /// Hover-revealed quick actions (§4.1): important star + delete.
+    private var cleanDisplayTitle: String? {
+        let trimmed = task.title.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed.isEmpty { return nil }
+        if let link = task.linkAttachments.first {
+            if trimmed == link.url.absoluteString || trimmed == link.url.host || trimmed.hasPrefix("http://") || trimmed.hasPrefix("https://") {
+                return nil
+            }
+        } else if trimmed.hasPrefix("http://") || trimmed.hasPrefix("https://") {
+            return nil
+        }
+        return trimmed
+    }
+
+    /// Task actions: important star (always visible when starred, subtle on hover) + delete.
     private var hoverActions: some View {
         HStack(spacing: 6) {
             Button {
                 toggleImportant()
             } label: {
                 Image(systemName: task.isImportant ? "star.fill" : "star")
-                    .font(.system(size: 11))
-                    .foregroundStyle(task.isImportant ? AppTheme.accentViolet : AppTheme.textSecondary)
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(task.isImportant ? AppTheme.accentAmber : AppTheme.textSecondary)
             }
             .buttonStyle(.plain)
-            .opacity(isHovering ? 1 : 0)
-            .disabled(!isHovering)
+            .opacity(task.isImportant ? 1.0 : (isHovering ? 0.9 : 0.25))
             .help(task.isImportant ? "Unmark important" : "Mark important")
 
             Button {

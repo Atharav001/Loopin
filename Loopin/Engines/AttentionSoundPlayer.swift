@@ -1,43 +1,37 @@
 import Foundation
 import AppKit
 
-/// Plays the attention sounds used across the app.
-///
-/// - Pomodoro/Timer cycle-end: a short chime, silenced in `.gentle` mode per
-///   DESIGN.md §9's intensity-scaling rule.
-/// - Focus Interval Alarms: a distinct, louder, more insistent bell/buzz that is
-///   ALWAYS played regardless of `stimulationIntensity` (§3.3 — a deliberate,
-///   documented exception to the intensity rule).
+/// Plays polite, calm sensory auditory cues across the app.
 final class AttentionSoundPlayer {
     static let shared = AttentionSoundPlayer()
 
     private init() {}
 
-    /// Short, polite chime for Pomodoro/Timer cycle-ends.
+    /// Calm crystal chime for cycle ends and task completions.
     func playCycleEndChime() {
         Playback.play(name: "Glass", repeats: 1)
     }
 
-    /// The Focus Interval Alarm's distinct, louder, insistent bell (§3.3).
-    /// Three rapid strikes read as "louder/more insisting" than the single chime.
+    /// Calm, gentle reminder sound for Focus Interval Alarms.
+    /// Uses a serene, polite sound rather than harsh alerts.
     func playAlarmBell() {
-        Playback.play(name: "Sosumi", repeats: 3)
+        Playback.play(name: "Blow", repeats: 1)
     }
 
-    /// A louder still variant for the full-screen attention overlay (Phase 15).
+    /// Subtle soft chime.
     func playAttentionBurst() {
-        Playback.play(name: "Funk", repeats: 2)
+        Playback.play(name: "Purr", repeats: 1)
     }
 }
 
 private enum Playback {
     static func play(name: NSSound.Name, repeats: Int) {
         guard let sound = NSSound(named: name) else {
-            NSSound.beep()
             return
         }
+        sound.volume = 0.65
         for i in 0..<max(1, repeats) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.35) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.4) {
                 sound.play()
             }
         }

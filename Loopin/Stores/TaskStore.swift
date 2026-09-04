@@ -56,6 +56,12 @@ final class TaskStore: ObservableObject {
         current.fetchedTitle = metadata.title ?? current.fetchedTitle
         current.faviconData = metadata.favicon ?? current.faviconData
         tasks[index].linkAttachments[0] = current
+        if let title = metadata.title, !title.isEmpty {
+            let existing = tasks[index].title.trimmingCharacters(in: .whitespacesAndNewlines)
+            if existing.isEmpty || existing == current.url.absoluteString || existing == current.url.host {
+                tasks[index].title = title
+            }
+        }
         scheduleSave()
     }
 

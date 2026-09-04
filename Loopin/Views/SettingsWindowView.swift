@@ -12,7 +12,7 @@ struct SettingsWindowView: View {
             SettingsView()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .frame(minWidth: 360, minHeight: 420)
+        .frame(minWidth: 580, minHeight: 480)
         .background(AppTheme.background)
         .glow(
             accent: AppTheme.accentViolet,

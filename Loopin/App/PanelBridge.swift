@@ -8,8 +8,13 @@ final class PanelBridge: ObservableObject {
     @Published var isPinned: Bool = false
 
     var onTogglePin: (() -> Void)?
+    var onClose: (() -> Void)?
 
     func togglePin() {
         onTogglePin?()
+    }
+
+    func close() {
+        onClose?()
     }
 }

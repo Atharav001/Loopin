@@ -27,8 +27,16 @@ final class WindowController {
         self.settingsStore = settingsStore
         self.bridge = PanelBridge()
 
-        let panel = FloatingPanel()
-        self.panel = panel
+        let targetPanel: FloatingPanel
+        if kind == .settings {
+            targetPanel = FloatingPanel(
+                contentRect: NSRect(x: 0, y: 0, width: 660, height: 560),
+                minSize: NSSize(width: 580, height: 480)
+            )
+        } else {
+            targetPanel = FloatingPanel()
+        }
+        self.panel = targetPanel
 
         // Per-window pin state persists independently (§1.2).
         let keys = settingsStore.settings.windowPinned
@@ -39,10 +47,17 @@ final class WindowController {
             panel.setFrame(frame, display: false)
         }
 
-        if bridge.isPinned { applyPinned() }
+        if bridge.isPinned {
+            applyPinned()
+        } else {
+            applyUnpinned()
+        }
 
         bridge.onTogglePin = { [weak self] in
             self?.togglePinned()
+        }
+        bridge.onClose = { [weak self] in
+            self?.hide()
         }
 
         NotificationCenter.default.addObserver(
@@ -60,6 +75,7 @@ final class WindowController {
     }
 
     func show() {
+        NSApp.activate(ignoringOtherApps: true)
         panel.makeKeyAndOrderFront(nil)
         panel.orderFrontRegardless()
         NotificationCenter.default.post(name: .panelDidOpen, object: self)

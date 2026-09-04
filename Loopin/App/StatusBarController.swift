@@ -201,16 +201,49 @@ final class StatusBarController: NSObject {
     }
 
     private func iconImage(for state: MenuBarIconState) -> NSImage? {
-        let symbol: String
         switch state {
         case .idle:
-            symbol = "checklist"
+            return createLoopinBrandIcon()
         case .focusRunning:
-            symbol = "timer"
+            let config = NSImage.SymbolConfiguration(pointSize: 13, weight: .semibold)
+            return NSImage(systemSymbolName: "stopwatch.fill", accessibilityDescription: "Loopin Focus Running")?.withSymbolConfiguration(config)
         case .breakRunning:
-            symbol = "cup.and.saucer.fill"
+            let config = NSImage.SymbolConfiguration(pointSize: 13, weight: .semibold)
+            return NSImage(systemSymbolName: "cup.and.saucer.fill", accessibilityDescription: "Loopin Break")?.withSymbolConfiguration(config)
         }
-        return NSImage(systemSymbolName: symbol, accessibilityDescription: "Loopin")
+    }
+
+    /// Custom retina-crisp Loopin infinity focus emblem for the macOS menu bar.
+    private func createLoopinBrandIcon() -> NSImage {
+        let size = NSSize(width: 18, height: 18)
+        let image = NSImage(size: size, flipped: false) { _ in
+            let path = NSBezierPath()
+            // Sleek infinity loop geometry
+            path.move(to: NSPoint(x: 9.0, y: 9.0))
+            path.curve(to: NSPoint(x: 4.5, y: 13.0), controlPoint1: NSPoint(x: 7.2, y: 11.8), controlPoint2: NSPoint(x: 5.8, y: 13.0))
+            path.curve(to: NSPoint(x: 1.5, y: 9.0), controlPoint1: NSPoint(x: 2.8, y: 13.0), controlPoint2: NSPoint(x: 1.5, y: 11.2))
+            path.curve(to: NSPoint(x: 4.5, y: 5.0), controlPoint1: NSPoint(x: 1.5, y: 6.8), controlPoint2: NSPoint(x: 2.8, y: 5.0))
+            path.curve(to: NSPoint(x: 9.0, y: 9.0), controlPoint1: NSPoint(x: 5.8, y: 5.0), controlPoint2: NSPoint(x: 7.2, y: 6.2))
+            path.curve(to: NSPoint(x: 13.5, y: 13.0), controlPoint1: NSPoint(x: 10.8, y: 11.8), controlPoint2: NSPoint(x: 12.2, y: 13.0))
+            path.curve(to: NSPoint(x: 16.5, y: 9.0), controlPoint1: NSPoint(x: 15.2, y: 13.0), controlPoint2: NSPoint(x: 16.5, y: 11.2))
+            path.curve(to: NSPoint(x: 13.5, y: 5.0), controlPoint1: NSPoint(x: 16.5, y: 6.8), controlPoint2: NSPoint(x: 15.2, y: 5.0))
+            path.curve(to: NSPoint(x: 9.0, y: 9.0), controlPoint1: NSPoint(x: 12.2, y: 5.0), controlPoint2: NSPoint(x: 10.8, y: 6.2))
+
+            path.lineWidth = 1.7
+            path.lineCapStyle = .round
+            path.lineJoinStyle = .round
+            NSColor.black.setStroke()
+            path.stroke()
+
+            // Center focal node
+            let centerDot = NSBezierPath(ovalIn: NSRect(x: 7.8, y: 7.8, width: 2.4, height: 2.4))
+            NSColor.black.setFill()
+            centerDot.fill()
+
+            return true
+        }
+        image.isTemplate = true
+        return image
     }
 }
 

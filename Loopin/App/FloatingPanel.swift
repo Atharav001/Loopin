@@ -2,11 +2,15 @@ import AppKit
 
 final class FloatingPanel: NSPanel {
     override var canBecomeKey: Bool { true }
+    override var canBecomeMain: Bool { true }
 
-    init() {
+    init(
+        contentRect: NSRect = NSRect(x: 0, y: 0, width: 360, height: 480),
+        minSize: NSSize = NSSize(width: 320, height: 400)
+    ) {
         super.init(
-            contentRect: NSRect(x: 0, y: 0, width: 360, height: 480),
-            styleMask: [.nonactivatingPanel, .titled, .resizable, .closable, .fullSizeContentView],
+            contentRect: contentRect,
+            styleMask: [.titled, .resizable, .closable, .fullSizeContentView],
             backing: .buffered,
             defer: false
         )
@@ -15,11 +19,11 @@ final class FloatingPanel: NSPanel {
         isFloatingPanel = true
         hidesOnDeactivate = false
         isMovableByWindowBackground = true
-        becomesKeyOnlyIfNeeded = true
+        becomesKeyOnlyIfNeeded = false
         isReleasedWhenClosed = false
-        minSize = NSSize(width: 320, height: 400)
-        collectionBehavior = [.moveToActiveSpace]
-        level = .statusBar
+        self.minSize = minSize
+        collectionBehavior = [.moveToActiveSpace, .participatesInCycle, .fullScreenAuxiliary]
+        level = .normal
         backgroundColor = .clear
     }
 }

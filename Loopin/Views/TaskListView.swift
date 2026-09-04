@@ -35,14 +35,12 @@ struct TaskListView: View {
 
     /// Today: open tasks with no future due date (no date or due today).
     private var todayTasks: [Task] {
-        importantOnly
-            ? openTasks.filter { $0.isImportant && !isFutureDue($0) }
-            : openTasks.filter { !isFutureDue($0) }
+        openTasks.filter { !isFutureDue($0) }
     }
 
     /// Later: open tasks due in the future.
     private var laterTasks: [Task] {
-        importantOnly ? [] : openTasks.filter { isFutureDue($0) }
+        openTasks.filter { isFutureDue($0) }
     }
 
     private func isFutureDue(_ task: Task) -> Bool {
@@ -52,7 +50,7 @@ struct TaskListView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            filterBar
+            taskListHeader
             Divider()
             Group {
                 if taskStore.tasks.isEmpty {
@@ -78,42 +76,41 @@ struct TaskListView: View {
         .overlay(alignment: .bottom) { undoBar }
     }
 
-    // MARK: - Filter bar (§4.2.1)
+    // MARK: - Task List Header (Important filter removed; star field is kept on tasks)
 
-    private var filterBar: some View {
+    private var taskListHeader: some View {
         HStack {
-            Button {
-                importantOnly.toggle()
-            } label: {
-                HStack(spacing: 5) {
-                    Image(systemName: importantOnly ? "star.fill" : "star")
-                        .font(.system(size: 11))
-                    Text("Important")
-                        .font(.system(size: 11, weight: .medium))
-                }
-                .foregroundStyle(importantOnly ? Color.black : AppTheme.textSecondary)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(
-                    Capsule()
-                        .fill(importantOnly ? AppTheme.accentViolet : AppTheme.surface)
-                )
-            }
-            .buttonStyle(.plain)
+            Text("TASKS (\(openTasks.count))")
+                .font(.system(size: 11, weight: .bold))
+                .foregroundStyle(AppTheme.textSecondary)
+                .tracking(0.5)
 
             Spacer()
+
             if !completedTasks.isEmpty {
                 Button {
-                    showingCompleted.toggle()
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        showingCompleted.toggle()
+                    }
                 } label: {
-                    Label("Completed (\(completedTasks.count))", systemImage: "checkmark.circle")
-                        .font(.system(size: 11))
-                        .foregroundStyle(AppTheme.textSecondary)
+                    HStack(spacing: 4) {
+                        Image(systemName: showingCompleted ? "chevron.down" : "chevron.right")
+                            .font(.system(size: 9, weight: .bold))
+                        Text("Completed (\(completedTasks.count))")
+                            .font(.system(size: 11, weight: .medium))
+                    }
+                    .foregroundStyle(AppTheme.textSecondary)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(
+                        Capsule()
+                            .fill(AppTheme.surface)
+                    )
                 }
                 .buttonStyle(.plain)
             }
         }
-        .padding(.horizontal, 12)
+        .padding(.horizontal, 14)
         .padding(.vertical, 6)
     }
 
